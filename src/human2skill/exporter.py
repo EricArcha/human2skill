@@ -11,17 +11,35 @@ from human2skill.timeutils import utc_now_iso
 PRIVATE_MARKERS = ("完整聊天记录", "身份证", "手机号", "原始私聊", "朋友圈原文")
 
 
-def latest_review_passed(base: Path) -> bool:
+def review_path_for_variant(base: Path, variant: str) -> Path | None:
     reviews_dir = base / "private_evidence" / "reviews"
-    if not reviews_dir.is_dir():
-        return False
+    direct = reviews_dir / f"{variant}.json"
+    if direct.exists():
+        return direct
 
-    review_files = sorted(reviews_dir.glob("*.json"))
-    if not review_files:
-        return False
+    legacy = reviews_dir / "review-v1.json"
+    if variant == "advisor" and legacy.exists():
+        return legacy
 
-    latest = json.loads(review_files[-1].read_text(encoding="utf-8"))
-    return latest.get("passed", False)
+    return None
+
+
+def load_review_for_variant(base: Path, variant: str) -> dict:
+    path = review_path_for_variant(base, variant)
+    if path is None:
+        raise ValueError(f"Cannot export {variant}: review report is missing.")
+
+    report = json.loads(path.read_text(encoding="utf-8"))
+    report_variant = report.get("variant")
+    if report_variant is not None and report_variant != variant:
+        raise ValueError(
+            f"Cannot export {variant}: review report variant mismatch: {report_variant}"
+        )
+    return report
+
+
+def review_passed_for_variant(base: Path, variant: str) -> bool:
+    return bool(load_review_for_variant(base, variant).get("passed", False))
 
 
 def variant_skill_path(base: Path, variant: str) -> Path:
@@ -44,8 +62,9 @@ def export_skill(
     if host not in HOSTS:
         raise ValueError(f"Unknown host: {host!r}. Supported: {HOSTS}")
 
-    if not latest_review_passed(base):
-        raise ValueError("Cannot export: latest review is missing or did not pass.")
+    review = load_review_for_variant(base, variant)
+    if not review.get("passed", False):
+        raise ValueError(f"Cannot export {variant}: review did not pass.")
 
     skill_path = variant_skill_path(base, variant)
     if not skill_path.exists():
@@ -56,6 +75,10 @@ def export_skill(
 
     dest_skill = export_dir / "SKILL.md"
     shutil.copy2(skill_path, dest_skill)
+
+    privacy_passed = _privacy_check_passed(dest_skill)
+    if not privacy_passed:
+        raise ValueError(f"Cannot export {variant}: privacy check failed.")
 
     resolved_created_at = created_at or utc_now_iso()
     person_slug = base.name
@@ -68,8 +91,8 @@ def export_skill(
         "created_at": resolved_created_at,
         "files": ["SKILL.md"],
         "install_hint": f"Copy SKILL.md into your {host} skills directory.",
-        "review_passed": latest_review_passed(base),
-        "privacy_check_passed": _privacy_check_passed(dest_skill),
+        "review_passed": bool(review.get("passed", False)),
+        "privacy_check_passed": privacy_passed,
     }
 
     validate_document("export_manifest.schema.json", manifest)
