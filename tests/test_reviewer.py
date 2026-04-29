@@ -123,6 +123,7 @@ def test_structured_review_fails_when_expression_score_below_threshold():
 
     assert report["passed"] is False
     assert report["scores"]["expression_similarity"] < 4
+    assert not report["hard_failures"]
     assert any("expression" in change.lower() or "表达" in change for change in report["required_changes"])
 
 
@@ -138,6 +139,7 @@ def test_structured_review_fails_when_thinking_score_below_threshold():
 
     assert report["passed"] is False
     assert report["scores"]["thinking_utility"] < 4
+    assert not report["hard_failures"]
     assert any("thinking" in change.lower() or "思维" in change for change in report["required_changes"])
 
 

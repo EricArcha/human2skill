@@ -249,8 +249,8 @@ def structured_review(
     """Perform a structured review of a generated skill.
 
     Returns a review report dict conforming to review_report.schema.json.
-    Passes only when there are no hard failures AND honesty_boundary == 5
-    AND privacy_safety == 5.
+    Passes only when there are no hard failures AND all REVIEW_PASS_THRESHOLDS
+    are met.
     """
     scores = {
         "evidence_consistency": _score_evidence_consistency(content),
