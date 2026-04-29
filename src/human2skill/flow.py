@@ -16,6 +16,17 @@ from human2skill.storage import snapshot_version, write_json
 from human2skill.timeutils import utc_now_iso
 
 
+BLOCKING_CONFLICT_RESOLUTIONS = {"halt_for_review"}
+
+
+def blocking_conflicts(pack: dict) -> list[dict]:
+    return [
+        conflict
+        for conflict in pack.get("conflicts", [])
+        if conflict.get("resolution") in BLOCKING_CONFLICT_RESOLUTIONS
+    ]
+
+
 def create_project_person(
     *,
     root: Path,
@@ -103,10 +114,7 @@ def build_from_distillation(
 
     # Run structured review for each rendered variant.
     reviews: dict[str, dict] = {}
-    unresolved_conflicts = [
-        c for c in pack.get("conflicts", [])
-        if c.get("resolution") != "resolved"
-    ]
+    unresolved_conflicts = blocking_conflicts(pack)
 
     for variant_name, content in variants.items():
         reviews[variant_name] = structured_review(
@@ -148,10 +156,7 @@ def detect_update_conflicts(pack: dict) -> dict:
     * ``halted`` (bool) -- whether the update should be blocked
     * ``conflicts`` (list[dict]) -- the blocking conflict records
     """
-    blocking = [
-        c for c in pack.get("conflicts", [])
-        if c.get("resolution") == "halt_for_review"
-    ]
+    blocking = blocking_conflicts(pack)
     return {
         "halted": len(blocking) > 0,
         "conflicts": blocking,
