@@ -1,0 +1,13 @@
+{
+  "profile_type": "mentor",
+  "display_name": "导师/专家",
+  "core_sections": ["mental_models", "expression_dna", "decision_heuristics", "pressure_response", "honest_boundaries"],
+  "special_sections": ["view_system", "judgment_framework", "teaching_style", "feedback_style", "known_blindspots"],
+  "weights": {
+    "view_system": 5,
+    "judgment_framework": 5,
+    "teaching_feedback": 4,
+    "expression": 4,
+    "relationship_interaction": 3
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "profile_type": "colleague",
+  "display_name": "同事/合作者",
+  "core_sections": ["mental_models", "expression_dna", "decision_heuristics", "pressure_response", "honest_boundaries"],
+  "special_sections": ["work_scope", "workflow", "collaboration_rules", "output_preferences"],
+  "weights": {
+    "work_method": 5,
+    "decision_standard": 5,
+    "expression": 4,
+    "relationship_interaction": 3,
+    "emotional_support": 1
+  }
+}

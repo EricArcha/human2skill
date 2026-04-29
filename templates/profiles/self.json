@@ -1,0 +1,13 @@
+{
+  "profile_type": "self",
+  "display_name": "自己",
+  "core_sections": ["mental_models", "expression_dna", "decision_heuristics", "pressure_response", "honest_boundaries"],
+  "special_sections": ["self_reflection", "decision_mirror", "long_term_preferences", "recurring_blindspots"],
+  "weights": {
+    "self_reflection": 5,
+    "decision_mirror": 5,
+    "long_term_preference": 5,
+    "expression": 3,
+    "relationship_interaction": 3
+  }
+}

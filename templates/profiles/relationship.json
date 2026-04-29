@@ -1,0 +1,13 @@
+{
+  "profile_type": "relationship",
+  "display_name": "朋友/亲人",
+  "core_sections": ["mental_models", "expression_dna", "decision_heuristics", "pressure_response", "honest_boundaries"],
+  "special_sections": ["relationship_patterns", "emotional_triggers", "support_style", "conflict_repair", "boundaries"],
+  "weights": {
+    "relationship_interaction": 5,
+    "emotional_response": 5,
+    "expression": 5,
+    "value_order": 4,
+    "work_method": 1
+  }
+}
