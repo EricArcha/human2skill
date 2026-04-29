@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "person_slug", "evidence", "claims"],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "person_slug": {"type": "string"},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "source_type", "source_summary", "retention", "confidence", "supports"],
+        "properties": {
+          "evidence_id": {"type": "string", "pattern": "^ev-[0-9]{4}$"},
+          "source_type": {"enum": ["direct_quote_or_behavior", "observer_report", "model_inference"]},
+          "source_ref": {"type": "string"},
+          "source_summary": {"type": "string", "minLength": 1},
+          "retention": {"enum": ["no_raw_retention", "summary_only", "local_private_raw"]},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "observed_at": {"type": "string"},
+          "supports": {"type": "array", "items": {"type": "string"}},
+          "conflicts_with": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "claim", "claim_type", "confidence", "evidence_ids", "status"],
+        "properties": {
+          "claim_id": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"},
+          "claim": {"type": "string", "minLength": 1},
+          "claim_type": {"enum": ["mental_model", "decision_heuristic", "expression_dna", "profile_specific", "boundary"]},
+          "profile_scope": {"type": "string"},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "status": {"enum": ["active", "conflicted", "deprecated"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

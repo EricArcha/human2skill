@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "slug", "display_name", "profile_type", "privacy_policy", "lifecycle"],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "profile_type": {"enum": ["colleague", "relationship", "mentor", "self"]},
+    "relationship_to_user": {"type": "string"},
+    "use_case": {"type": "string"},
+    "consent_status": {
+      "type": "object",
+      "required": ["person_consented", "distribution_allowed"],
+      "properties": {
+        "person_consented": {"type": "boolean"},
+        "distribution_allowed": {"type": "boolean"},
+        "notes": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "privacy_policy": {
+      "type": "object",
+      "required": ["raw_retention", "public_skill_allows_private_quotes"],
+      "properties": {
+        "raw_retention": {"enum": ["no_raw_retention", "summary_only", "local_private_raw"]},
+        "public_skill_allows_private_quotes": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["version", "created_at", "updated_at"],
+      "properties": {
+        "version": {"type": "string", "pattern": "^v[0-9]+$"},
+        "created_at": {"type": "string"},
+        "updated_at": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
