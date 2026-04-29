@@ -11,8 +11,15 @@ def initialize_person_dir(root: Path, slug: str) -> Path:
     base = person_dir(root, slug)
     for relative in (
         "public_skill",
+        "public_skill/variants/advisor",
+        "public_skill/variants/first_person",
         "private_evidence/interviews",
         "private_evidence/reviews",
+        "private_evidence/changelog",
+        "exports/codex",
+        "exports/claude-code",
+        "exports/openclaw",
+        "exports/hermes",
         "versions",
     ):
         (base / relative).mkdir(parents=True, exist_ok=True)
