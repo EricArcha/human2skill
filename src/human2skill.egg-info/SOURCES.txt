@@ -1,8 +1,0 @@
-pyproject.toml
-src/human2skill/__init__.py
-src/human2skill.egg-info/PKG-INFO
-src/human2skill.egg-info/SOURCES.txt
-src/human2skill.egg-info/dependency_links.txt
-src/human2skill.egg-info/requires.txt
-src/human2skill.egg-info/top_level.txt
-tests/test_import.py
