@@ -1,0 +1,30 @@
+{
+  "schema_version": "1",
+  "slug": "colleague-li-ming",
+  "display_name": "李明",
+  "profile_type": "colleague",
+  "relationship_to_user": "同事，同一个技术团队的资深工程师",
+  "use_case": "工作评审与协作，理解其技术决策和团队协作方式",
+  "voice_mode": "both",
+  "consent_status": {
+    "person_consented": false,
+    "distribution_allowed": false,
+    "notes": "local private use unless explicitly changed"
+  },
+  "privacy_policy": {
+    "raw_retention": "summary_only",
+    "public_skill_allows_private_quotes": false
+  },
+  "export_policy": {
+    "default_visibility": "private",
+    "shareable_variants": [
+      "advisor"
+    ],
+    "requires_privacy_review": true
+  },
+  "lifecycle": {
+    "version": "v1",
+    "created_at": "2026-04-29T00:00:00+00:00",
+    "updated_at": "2026-04-29T00:00:00+00:00"
+  }
+}

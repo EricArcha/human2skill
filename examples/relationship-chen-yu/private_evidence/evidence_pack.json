@@ -1,0 +1,173 @@
+{
+  "schema_version": "1",
+  "person_slug": "relationship-chen-yu",
+  "evidence": [
+    {
+      "evidence_id": "ev-0001",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "陈雨在朋友倾诉时说：'你先别急着给建议，先听我把情况说完。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0002",
+      "source_type": "observer_report",
+      "source_summary": "朋友观察：陈雨在朋友情绪低落时会用肯定和共情开场，而不是直接给解决方案。",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0003",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "陈雨说过：'我不喜欢冷战，有什么事直接说出来比较好。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0004",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "在一次误会的后续沟通中，陈雨主动说：'我们复盘一下刚才的事吧，我想听听你的感受。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0005",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "陈雨说：'我觉得一段关系里最重要的是被看见的感觉，而不是对方帮你解决了多少问题。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0006",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "陈雨在聊天中温和地说：'这个话题对我来说有点敏感，我们先聊点别的吧。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0007",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "朋友求助时陈雨说：'我可以在旁边支持你，但这是你的决定，我相信你能想清楚。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0008",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "陈雨说过：'朋友之间要有空间，太黏反而容易消耗。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0009",
+      "source_type": "observer_report",
+      "source_summary": "朋友观察：陈雨有时会对朋友的选择过于担忧，忍不住反复询问和确认。",
+      "retention": "summary_only",
+      "confidence": "low",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0010",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "陈雨回忆处理冲突时说过：'我会先冷静一会，确定自己是为什么生气，再去跟对方说。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-1fc8080f",
+      "claim": "在对方倾诉时先倾听理解而非急于提供建议",
+      "claim_type": "expression_dna",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0001",
+        "ev-0002"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-a9655f7f",
+      "claim": "关系中最看重被看见的感觉，而非被解决问题",
+      "claim_type": "value_order",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0005",
+        "ev-0002"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-59aa84e3",
+      "claim": "不喜欢冷战，倾向于直接沟通解决冲突",
+      "claim_type": "pressure_response",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0003",
+        "ev-0010"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-5a19a656",
+      "claim": "冲突后会主动复盘，询问对方感受并探索改进方式",
+      "claim_type": "profile_specific",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0004"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-2853ee81",
+      "claim": "对边界敏感，能温和但明确地表达不舒适的话题边界",
+      "claim_type": "mental_model",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0006"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-6b74e98a",
+      "claim": "帮助朋友时倾向于提供情感支持，鼓励自主决策而非代劳",
+      "claim_type": "mental_model",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0007"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-cdf506ff",
+      "claim": "朋友间需要保持适度距离，过度紧密会消耗关系",
+      "claim_type": "profile_specific",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0008",
+        "ev-0006"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-ff9c0938",
+      "claim": "偶尔对朋友的选择过度担忧，反复询问和确认",
+      "claim_type": "anti_pattern",
+      "confidence": "low",
+      "evidence_ids": [
+        "ev-0009"
+      ],
+      "status": "active"
+    }
+  ],
+  "conflicts": []
+}

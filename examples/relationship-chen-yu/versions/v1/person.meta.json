@@ -1,0 +1,30 @@
+{
+  "schema_version": "1",
+  "slug": "relationship-chen-yu",
+  "display_name": "陈雨",
+  "profile_type": "relationship",
+  "relationship_to_user": "多年好友，经常一起交流生活和情感问题",
+  "use_case": "在朋友互动中理解她的情感模式和需求，改善沟通和支持方式",
+  "voice_mode": "advisor",
+  "consent_status": {
+    "person_consented": false,
+    "distribution_allowed": false,
+    "notes": "local private use unless explicitly changed"
+  },
+  "privacy_policy": {
+    "raw_retention": "summary_only",
+    "public_skill_allows_private_quotes": false
+  },
+  "export_policy": {
+    "default_visibility": "private",
+    "shareable_variants": [
+      "advisor"
+    ],
+    "requires_privacy_review": true
+  },
+  "lifecycle": {
+    "version": "v1",
+    "created_at": "2026-04-29T00:00:00+00:00",
+    "updated_at": "2026-04-29T00:00:00+00:00"
+  }
+}

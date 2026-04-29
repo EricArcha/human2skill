@@ -51,7 +51,7 @@ def test_render_first_person_variant_has_mandatory_disclaimer():
     content = render_skill_variant(meta, full_distilled_sections(), variant="first_person")
 
     assert "有限第一人称" in content
-    assert "非本人观点" in content
+    assert "不代表本人观点" in content
     assert "不得声称自己就是李明本人" in content
     assert "我" in content
 

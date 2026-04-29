@@ -1,0 +1,22 @@
+{
+  "schema_version": "1",
+  "person_slug": "relationship-chen-yu",
+  "variant": "advisor",
+  "generated_at": "2026-04-29T00:00:00+00:00",
+  "passed": true,
+  "hard_failures": [],
+  "scores": {
+    "evidence_consistency": 5,
+    "confidence_calibration": 5,
+    "honest_boundary": 5,
+    "privacy_safety": 5,
+    "expression_similarity": 5,
+    "thinking_utility": 5,
+    "profile_fit": 5
+  },
+  "required_changes": [],
+  "notes": [
+    "No hard failures detected.",
+    "Strong dimensions: evidence_consistency, confidence_calibration, honest_boundary, privacy_safety, expression_similarity, thinking_utility, profile_fit"
+  ]
+}

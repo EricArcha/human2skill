@@ -1,0 +1,219 @@
+{
+  "schema_version": "1",
+  "person_slug": "colleague-li-ming",
+  "evidence": [
+    {
+      "evidence_id": "ev-0001",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "技术评审中李明说：'先问这个改动影响了多少用户，再决定投入多少。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0002",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "周会上李明说：'可逆的决策快速执行，不可逆的决策拉更多人讨论。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0003",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "代码评审中李明写道：'这里的逻辑如果三个月后再看会好理解吗？'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0004",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "技术分享会上李明用装修房子的比喻来解释微服务架构设计原则。",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0005",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "在一次代码评审中李明先肯定了实现思路，然后才提出具体的改进建议。",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0006",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "站会上李明说：'遇到分歧先对齐目标，不要陷在方案层面争论。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0007",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "李明在发布评审会上说：'先发出去收集反馈，比在内部打磨完美更有价值。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0008",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "技术文档中李明写道：'宁可多写三行注释让意图清晰，也不省一行让后人猜测。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0009",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "李明在项目启动时明确同步时间节点：'周三前出原型，周五团队评审，下周二上线。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0010",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "李明在技术选型讨论中说：'不要过早优化，先用最简单方案验证假设。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0011",
+      "source_type": "observer_report",
+      "source_summary": "同事反馈：李明偶尔会对简单问题引入过度复杂的架构。",
+      "retention": "summary_only",
+      "confidence": "low",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0012",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "李明在复盘时说：'代码质量非常重要，但不要为了追求完美错过发布窗口。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-92a5e143",
+      "claim": "先问影响范围再做技术决策",
+      "claim_type": "decision_heuristic",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0001",
+        "ev-0002"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-a643cc7a",
+      "claim": "问题拆分优先于技术选型，用最简单方案先验证假设",
+      "claim_type": "mental_model",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0010"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-0c498daa",
+      "claim": "可逆决策快速执行，不可逆决策充分讨论",
+      "claim_type": "decision_heuristic",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0002",
+        "ev-0012"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-e5a9b0e3",
+      "claim": "技术讨论中习惯使用生活场景类比和故事化表达",
+      "claim_type": "expression_dna",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0004"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-e266a00f",
+      "claim": "代码和设计评审时先肯定再提改进建议",
+      "claim_type": "expression_dna",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0005"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-eaaf2719",
+      "claim": "注重代码可维护性，宁可多写注释也不让逻辑晦涩难懂",
+      "claim_type": "profile_specific",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0003",
+        "ev-0008"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-19b3841a",
+      "claim": "对时间线敏感，协作时主动同步预期完成时间",
+      "claim_type": "profile_specific",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0009"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-1f0d91d3",
+      "claim": "截止日期压力下倾向于先交付最小可用版本再迭代优化",
+      "claim_type": "pressure_response",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0007"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-eaac2ca3",
+      "claim": "遇到分歧先对齐目标而非争论方案细节",
+      "claim_type": "decision_heuristic",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0006",
+        "ev-0001"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-5c3ec177",
+      "claim": "代码质量优先于交付速度，但不为完美错过发布窗口",
+      "claim_type": "value_order",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0012"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-97cc77ad",
+      "claim": "偶尔对简单问题引入过度架构设计",
+      "claim_type": "anti_pattern",
+      "confidence": "low",
+      "evidence_ids": [
+        "ev-0011"
+      ],
+      "status": "active"
+    }
+  ],
+  "conflicts": []
+}
