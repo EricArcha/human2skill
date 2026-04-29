@@ -57,9 +57,9 @@ def test_self_perspective_uses_self_wording():
     assert "自己" in question or "过去" in question or "未来" in question
 
 
-def test_observer_perspective_asks_for_observable_behavior():
-    coverage = initial_coverage()
-    coverage["identity_context"] = "medium"
+def test_observer_perspective_uses_profile_specific_question_for_known_dimension():
+    coverage = {key: "medium" for key in initial_coverage()}
+    coverage["honest_boundaries"] = "missing"
 
     question = next_question_for_profile(
         coverage,
@@ -68,4 +68,4 @@ def test_observer_perspective_asks_for_observable_behavior():
         turn_count=1,
     )
 
-    assert "具体" in question or "观察" in question or "场景" in question
+    assert "工作场景" in question
