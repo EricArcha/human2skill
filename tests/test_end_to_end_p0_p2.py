@@ -50,7 +50,14 @@ def test_p0_p2_end_to_end_flow(tmp_path: Path):
         "person_slug": "li-ming",
         "generated_at": "2026-04-29T00:00:00+00:00",
         "source_evidence_pack_version": "v1",
-        "mental_models": [],
+        "mental_models": [{
+            "title": "Impact first",
+            "content": "方案评审前先问 impact 和目标。",
+            "claim_ids": [claim["claim_id"]],
+            "confidence": "medium",
+            "evidence_summary": "手动观察摘要支持。",
+            "limits": ["只覆盖工作评审。"]
+        }],
         "decision_heuristics": [{
             "title": "Impact first",
             "content": "方案评审前先问 impact 和目标。",
@@ -59,7 +66,14 @@ def test_p0_p2_end_to_end_flow(tmp_path: Path):
             "evidence_summary": "手动观察摘要支持。",
             "limits": ["只覆盖工作评审。"]
         }],
-        "expression_dna": [],
+        "expression_dna": [{
+            "title": "直接表达",
+            "content": "结论先行。",
+            "claim_ids": [claim["claim_id"]],
+            "confidence": "medium",
+            "evidence_summary": "手动观察摘要支持。",
+            "limits": ["只覆盖工作场景。"]
+        }],
         "profile_specific": [],
         "pressure_response": [],
         "value_order": [],

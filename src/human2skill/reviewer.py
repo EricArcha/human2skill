@@ -112,6 +112,9 @@ def _score_expression_similarity(content: str) -> int:
                 if line.startswith("##"):
                     break
                 if line.strip().startswith("-") and len(line.strip()) > 3:
+                    text = line.strip()[1:].strip()
+                    if text and "证据不足" in text:
+                        continue
                     count += 1
         if count >= 2:
             return 5
@@ -136,6 +139,9 @@ def _score_thinking_utility(content: str) -> int:
                 if line.startswith("##"):
                     break
                 if line.strip().startswith("-") and len(line.strip()) > 3:
+                    text = line.strip()[1:].strip()
+                    if text and "证据不足" in text:
+                        continue
                     count += 1
         if count >= 2:
             return 5

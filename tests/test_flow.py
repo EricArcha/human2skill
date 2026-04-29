@@ -47,7 +47,14 @@ def test_build_from_distillation_renders_and_reviews(tmp_path: Path):
         "person_slug": "li-ming",
         "generated_at": "2026-04-29T00:00:00+00:00",
         "source_evidence_pack_version": "v1",
-        "mental_models": [],
+        "mental_models": [{
+            "title": "Impact first",
+            "content": "先问 impact，再讨论方案。",
+            "claim_ids": [pack["claims"][0]["claim_id"]],
+            "confidence": "medium",
+            "evidence_summary": "观察者报告。",
+            "limits": ["只覆盖工作评审。"]
+        }],
         "decision_heuristics": [{
             "title": "Impact first",
             "content": "先问 impact。",
@@ -56,7 +63,14 @@ def test_build_from_distillation_renders_and_reviews(tmp_path: Path):
             "evidence_summary": "观察者报告。",
             "limits": ["只覆盖工作评审。"]
         }],
-        "expression_dna": [],
+        "expression_dna": [{
+            "title": "直接表达",
+            "content": "结论先行。",
+            "claim_ids": [pack["claims"][0]["claim_id"]],
+            "confidence": "medium",
+            "evidence_summary": "观察者报告。",
+            "limits": ["只覆盖工作场景。"]
+        }],
         "profile_specific": [],
         "pressure_response": [],
         "value_order": [],

@@ -23,11 +23,12 @@ _CLAIM_REQUIRED_SECTIONS = (
 _OUTPUT_SECTIONS = _CLAIM_REQUIRED_SECTIONS + ("honest_boundaries",)
 
 
-def validate_distillation(payload: dict, available_claim_ids: set[str]) -> None:
+def validate_distillation(payload: dict, available_claim_ids: set[str], person_slug: str | None = None) -> None:
     """Validate a distillation payload against the schema and claim-id integrity rules.
 
     Rules:
     - Schema must pass ``distillation.schema.json``.
+    - If *person_slug* is provided, ``payload["person_slug"]`` must match.
     - Every item in every section except ``honest_boundaries`` must have at least
       one claim ID.
     - Every claim ID must exist in *available_claim_ids*.
@@ -39,6 +40,12 @@ def validate_distillation(payload: dict, available_claim_ids: set[str]) -> None:
         validate_document("distillation.schema.json", payload)
     except SchemaValidationError as exc:
         raise DistillationError(str(exc)) from exc
+
+    # Person slug check.
+    if person_slug is not None and payload.get("person_slug") != person_slug:
+        raise DistillationError(
+            f"person_slug mismatch: expected {person_slug!r}, got {payload.get('person_slug')!r}"
+        )
 
     # Claim-id integrity for sections that require claim IDs.
     for section in _CLAIM_REQUIRED_SECTIONS:
@@ -97,3 +104,46 @@ def distillation_to_sections(payload: dict) -> dict[str, list[str]]:
     Each section key maps to a list of ``format_distilled_item`` results.
     """
     return {key: [format_distilled_item(item) for item in payload.get(key, [])] for key in _OUTPUT_SECTIONS}
+
+
+_OVERCONFIDENCE_RANK = {"unsupported": 0, "low": 1, "medium": 2, "high": 3}
+
+
+def find_overconfident_distillation_items(payload: dict, pack: dict) -> list[dict]:
+    """Find distillation items whose confidence exceeds their referenced claims' support.
+
+    Returns dicts with keys ``claim_id``, ``claimed``, ``supported``, and ``section``.
+    """
+    from human2skill.evidence import claim_support_level  # noqa: PLC0415
+
+    claims_by_id = {c["claim_id"]: c for c in pack.get("claims", [])}
+    overconfident: list[dict] = []
+
+    for section in _OUTPUT_SECTIONS:
+        for item in payload.get(section, []):
+            item_conf = item.get("confidence", "").lower()
+            if item_conf not in _OVERCONFIDENCE_RANK:
+                continue
+
+            claim_ids = item.get("claim_ids", [])
+            if not claim_ids:
+                continue
+
+            min_support: str | None = None
+            for cid in claim_ids:
+                claim = claims_by_id.get(cid)
+                if claim is None:
+                    continue
+                support = claim_support_level(pack, claim)
+                if min_support is None or _OVERCONFIDENCE_RANK[support] < _OVERCONFIDENCE_RANK[min_support]:
+                    min_support = support
+
+            if min_support is not None and _OVERCONFIDENCE_RANK[item_conf] > _OVERCONFIDENCE_RANK[min_support]:
+                overconfident.append({
+                    "claim_id": claim_ids[0],
+                    "claimed": item_conf,
+                    "supported": min_support,
+                    "section": section,
+                })
+
+    return overconfident

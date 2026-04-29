@@ -99,6 +99,16 @@ def test_validate_distillation_rejects_invalid_schema():
         validate_distillation(payload, available_claim_ids=set())
 
 
+def test_validate_distillation_rejects_wrong_person_slug():
+    payload = valid_distillation()
+    payload["person_slug"] = "other-person"
+
+    with pytest.raises(DistillationError) as error:
+        validate_distillation(payload, available_claim_ids={"claim-impact-first"}, person_slug="li-ming")
+
+    assert "person_slug mismatch" in str(error.value)
+
+
 def test_format_distilled_item_formats_basic_item():
     item = {
         "title": "Impact first",

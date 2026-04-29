@@ -105,6 +105,18 @@ def restore_version(base: Path, version: str) -> Path:
     if not source.is_dir():
         raise FileNotFoundError(f"Version not found: {version}")
 
+    # Clear fully-restored directories first to prevent stale files from
+    # surviving the restore (e.g. a variant that existed after the snapshot).
+    fully_restored_dirs = (
+        "public_skill/variants",
+        "private_evidence/reviews",
+        "private_evidence/changelog",
+    )
+    for relative in fully_restored_dirs:
+        dest = base / relative
+        if dest.is_dir():
+            shutil.rmtree(dest)
+
     for item in source.rglob("*"):
         if not item.is_file():
             continue

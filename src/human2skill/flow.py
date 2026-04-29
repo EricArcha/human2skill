@@ -5,6 +5,7 @@ from pathlib import Path
 
 from human2skill.distillation import (
     distillation_to_sections,
+    find_overconfident_distillation_items,
     validate_distillation,
 )
 from human2skill.evidence import find_overconfident_claims
@@ -100,10 +101,10 @@ def build_from_distillation(
 
     # Collect available claim IDs and detect overconfident claims.
     available_claim_ids = {c["claim_id"] for c in pack.get("claims", [])}
-    overconfident = find_overconfident_claims(pack)
+    overconfident = find_overconfident_claims(pack) + find_overconfident_distillation_items(distillation, pack)
 
     # Validate the distillation payload.
-    validate_distillation(distillation, available_claim_ids)
+    validate_distillation(distillation, available_claim_ids, person_slug)
 
     # Write distillation.json.
     write_json(base / "private_evidence" / "distillation.json", distillation)
