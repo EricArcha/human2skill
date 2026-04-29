@@ -2,6 +2,7 @@ from human2skill.evidence_builder import (
     add_claim,
     add_conflict,
     add_evidence,
+    claim_id_from_text,
     empty_evidence_pack,
 )
 from human2skill.evidence import find_overconfident_claims
@@ -69,3 +70,18 @@ def test_overconfident_value_order_claim_is_flagged():
         "claimed": "high",
         "supported": "low",
     }]
+
+
+def test_add_claim_handles_duplicate_ids():
+    pack = empty_evidence_pack("li-ming")
+    add_claim(pack, claim="效率高于关系维护。",
+              claim_type="value_order", confidence="medium",
+              evidence_ids=[])
+    second = add_claim(pack, claim="效率高于关系维护。",
+                       claim_type="value_order", confidence="medium",
+                       evidence_ids=[])
+    assert second["claim_id"].endswith("-2")
+
+
+def test_claim_id_from_english_text():
+    assert claim_id_from_text("Ask about impact first") == "claim-ask-about-impact-first"
