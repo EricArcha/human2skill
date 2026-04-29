@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 
 from human2skill.ingest import add_text_source, ingest_file, load_source_index
@@ -45,3 +44,19 @@ def test_ingest_unsupported_file_type_rejects(tmp_path: Path):
         assert "Unsupported file type" in str(error)
     else:
         raise AssertionError("unsupported file did not fail")
+
+
+def test_add_text_source_rejects_invalid_source_kind(tmp_path: Path):
+    base = initialize_person_dir(tmp_path, "li-ming")
+
+    try:
+        add_text_source(
+            base,
+            title="test",
+            text="test",
+            source_kind="invalid_kind",
+        )
+    except ValueError as error:
+        assert "Unknown source kind" in str(error)
+    else:
+        raise AssertionError("invalid source kind did not fail")

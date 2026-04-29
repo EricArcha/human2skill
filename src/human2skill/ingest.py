@@ -40,6 +40,28 @@ def next_source_id(index: dict) -> str:
     return f"src-{count + 1:04d}"
 
 
+def _build_source_entry(
+    *,
+    source_kind: str,
+    title: str,
+    text: str,
+    provided_by: str,
+    created_at: str,
+    index: dict,
+) -> dict:
+    return {
+        "source_id": next_source_id(index),
+        "source_kind": source_kind,
+        "title": title,
+        "provided_by": provided_by,
+        "retention": "summary_only",
+        "contains_private_data": True,
+        "allowed_in_public_skill": False,
+        "summary": text.strip()[:500],
+        "created_at": created_at,
+    }
+
+
 def add_text_source(
     base: Path,
     *,
@@ -53,20 +75,15 @@ def add_text_source(
         raise ValueError(f"Unknown source kind: {source_kind!r}")
 
     created_at = now if now is not None else utc_now_iso()
-
     index = load_source_index(base)
-    source = {
-        "source_id": next_source_id(index),
-        "source_kind": source_kind,
-        "title": title,
-        "provided_by": provided_by,
-        "retention": "summary_only",
-        "contains_private_data": True,
-        "allowed_in_public_skill": False,
-        "summary": text.strip()[:500],
-        "created_at": created_at,
-    }
-
+    source = _build_source_entry(
+        source_kind=source_kind,
+        title=title,
+        text=text,
+        provided_by=provided_by,
+        created_at=created_at,
+        index=index,
+    )
     index["sources"].append(source)
     write_source_index(base, index)
     return source
@@ -97,20 +114,15 @@ def ingest_file(
 
     title = file_path.name
     created_at = now if now is not None else utc_now_iso()
-
     index = load_source_index(base)
-    source = {
-        "source_id": next_source_id(index),
-        "source_kind": source_kind,
-        "title": title,
-        "provided_by": provided_by,
-        "retention": "summary_only",
-        "contains_private_data": True,
-        "allowed_in_public_skill": False,
-        "summary": text.strip()[:500],
-        "created_at": created_at,
-    }
-
+    source = _build_source_entry(
+        source_kind=source_kind,
+        title=title,
+        text=text,
+        provided_by=provided_by,
+        created_at=created_at,
+        index=index,
+    )
     index["sources"].append(source)
     write_source_index(base, index)
     return source
