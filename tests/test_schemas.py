@@ -4,9 +4,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
-
-def load_schema(name):
-    return json.loads(Path("schemas", name).read_text(encoding="utf-8"))
+from human2skill.schemas import load_schema
 
 
 def test_person_meta_schema_accepts_minimal_valid_document():

@@ -8,7 +8,13 @@ def render_list(items: list[str]) -> str:
 
 
 def template_root() -> Path:
-    return Path(__file__).resolve().parent.parent.parent / "templates" / "skill"
+    """Resolve template directory, works in both dev and installed environments."""
+    try:
+        from importlib.resources import files
+
+        return files("human2skill").joinpath("templates", "skill")
+    except Exception:
+        return Path(__file__).resolve().parent / "templates" / "skill"
 
 
 def render_skill(meta: dict, distilled: dict, template_path: Path | None = None) -> str:

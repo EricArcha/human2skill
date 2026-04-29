@@ -10,16 +10,18 @@ class SchemaValidationError(ValueError):
     pass
 
 
-def project_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+def _resource_path(subdir: str, name: str) -> Path:
+    """Resolve a resource path, works in both dev and installed environments."""
+    try:
+        from importlib.resources import files
 
-
-def schema_dir() -> Path:
-    return project_root() / "schemas"
+        return files("human2skill").joinpath(subdir, name)
+    except Exception:
+        return Path(__file__).resolve().parent / subdir / name
 
 
 def load_schema(name: str) -> dict:
-    path = schema_dir() / name
+    path = _resource_path("schemas", name)
     return json.loads(path.read_text(encoding="utf-8"))
 
 
