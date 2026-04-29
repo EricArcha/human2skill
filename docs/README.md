@@ -25,6 +25,10 @@
 - `superpowers/plans/`：给 agentic worker 的执行手册，回答“下一步具体怎么做”。
 - `research/`：参考资料和外部仓库研究结论。
 
+## P0-P2 Flow
+
+Use `human2skill create`, `ingest`, `build`, `review`, `export`, and `install` for the local flow. Distillation remains agent-assisted through `distillation.json`; Python validates and renders the durable artifacts.
+
 ## 当前决策
 
 - 第一版聚焦私人/身边人，不以公众人物为主。
