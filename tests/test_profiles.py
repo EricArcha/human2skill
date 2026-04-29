@@ -1,3 +1,5 @@
+import pytest
+
 from human2skill.profiles import infer_profile_type, load_profile
 
 
@@ -23,3 +25,12 @@ def test_infers_mentor_from_expert_context():
 
 def test_infers_self_from_self_context():
     assert infer_profile_type("我想蒸馏过去的我") == "self"
+
+
+def test_load_profile_rejects_unknown_type():
+    with pytest.raises(ValueError, match="Unknown profile type"):
+        load_profile("stranger")
+
+
+def test_infer_profile_type_fallback_to_relationship():
+    assert infer_profile_type("今天天气不错") == "relationship"

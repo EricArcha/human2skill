@@ -6,7 +6,7 @@ PROFILE_TYPES = ("colleague", "relationship", "mentor", "self")
 
 
 def profile_dir() -> Path:
-    return Path("templates/profiles")
+    return Path(__file__).resolve().parent.parent.parent / "templates" / "profiles"
 
 
 def load_profile(profile_type: str) -> dict:
