@@ -2,6 +2,16 @@ from human2skill.schemas import validate_document
 
 PRIVATE_MARKERS = ("完整聊天记录", "身份证", "手机号", "原始私聊", "朋友圈原文")
 
+REVIEW_PASS_THRESHOLDS = {
+    "evidence_consistency": 4,
+    "confidence_calibration": 4,
+    "honest_boundary": 5,
+    "privacy_safety": 5,
+    "expression_similarity": 4,
+    "thinking_utility": 4,
+    "profile_fit": 4,
+}
+
 
 def review_public_skill(content: str) -> dict:
     failures = []
@@ -197,7 +207,8 @@ def _derive_required_changes(hard_failures: list[str], scores: dict[str, int]) -
     }
 
     for dimension, score in scores.items():
-        if score < 3 and dimension in score_to_change:
+        threshold = REVIEW_PASS_THRESHOLDS.get(dimension)
+        if threshold is not None and score < threshold and dimension in score_to_change:
             changes.append(score_to_change[dimension])
 
     return changes
@@ -216,7 +227,11 @@ def _derive_notes(scores: dict[str, int], hard_failures: list[str]) -> list[str]
     if strong:
         notes.append(f"Strong dimensions: {', '.join(strong)}")
 
-    weak = [dim for dim, score in scores.items() if score < 3]
+    weak = [
+        dim
+        for dim, score in scores.items()
+        if score < REVIEW_PASS_THRESHOLDS.get(dim, 1)
+    ]
     if weak:
         notes.append(f"Needs improvement: {', '.join(weak)}")
 
@@ -263,11 +278,13 @@ def structured_review(
     if variant == "first_person" and "不代表本人观点" not in content:
         hard_failures.append("first_person_missing_disclaimer")
 
-    passed = (
-        not hard_failures
-        and scores["honest_boundary"] == 5
-        and scores["privacy_safety"] == 5
-    )
+    threshold_failures = [
+        dimension
+        for dimension, threshold in REVIEW_PASS_THRESHOLDS.items()
+        if scores[dimension] < threshold
+    ]
+
+    passed = not hard_failures and not threshold_failures
 
     required_changes = _derive_required_changes(hard_failures, scores)
     notes = _derive_notes(scores, hard_failures)
