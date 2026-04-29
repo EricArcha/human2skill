@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, exceptions
+from jsonschema import Draft202012Validator
 
 
 class SchemaValidationError(ValueError):
