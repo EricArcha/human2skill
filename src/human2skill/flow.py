@@ -132,10 +132,14 @@ def build_from_distillation(
         review_path = reviews_dir / f"{variant_name}.json"
         write_json(review_path, report)
 
-    # Snapshot the version.
-    lifecycle = meta.get("lifecycle", {})
-    version = lifecycle.get("version", "v1")
-    snapshot = snapshot_version(base, version)
+    # Only snapshot if all variant reviews passed.
+    all_passed = all(report["passed"] for report in reviews.values())
+    if all_passed:
+        lifecycle = meta.get("lifecycle", {})
+        version = lifecycle.get("version", "v1")
+        snapshot = snapshot_version(base, version)
+    else:
+        snapshot = None
 
     # For the result, return the advisor review as the primary 'review'.
     advisor_review = reviews.get("advisor", list(reviews.values())[0] if reviews else {})
