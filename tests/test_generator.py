@@ -62,3 +62,11 @@ def test_render_both_variants_returns_two_entries():
     variants = render_skill_variants(meta, full_distilled_sections())
 
     assert set(variants) == {"advisor", "first_person"}
+
+
+def test_missing_voice_mode_defaults_to_advisor_only():
+    meta = {"slug": "li-ming", "display_name": "李明"}
+
+    variants = render_skill_variants(meta, full_distilled_sections())
+
+    assert set(variants) == {"advisor"}

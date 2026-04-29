@@ -70,7 +70,7 @@ def render_skill_variant(meta: dict, sections: dict, variant: str = "advisor") -
 
 
 def render_skill_variants(meta: dict, sections: dict) -> dict[str, str]:
-    voice_mode = meta.get("voice_mode", "both")
+    voice_mode = meta.get("voice_mode", "advisor")
     result: dict[str, str] = {}
     if voice_mode in ("advisor", "both"):
         result["advisor"] = render_skill_variant(meta, sections, "advisor")
