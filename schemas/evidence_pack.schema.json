@@ -4,7 +4,7 @@
   "required": ["schema_version", "person_slug", "evidence", "claims"],
   "properties": {
     "schema_version": {"const": "1"},
-    "person_slug": {"type": "string"},
+    "person_slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
     "evidence": {
       "type": "array",
       "items": {
@@ -17,7 +17,7 @@
           "source_summary": {"type": "string", "minLength": 1},
           "retention": {"enum": ["no_raw_retention", "summary_only", "local_private_raw"]},
           "confidence": {"enum": ["high", "medium", "low"]},
-          "observed_at": {"type": "string"},
+          "observed_at": {"type": "string", "format": "date-time"},
           "supports": {"type": "array", "items": {"type": "string"}},
           "conflicts_with": {"type": "array", "items": {"type": "string"}},
           "notes": {"type": "string"}
@@ -36,7 +36,7 @@
           "claim_type": {"enum": ["mental_model", "decision_heuristic", "expression_dna", "profile_specific", "boundary"]},
           "profile_scope": {"type": "string"},
           "confidence": {"enum": ["high", "medium", "low"]},
-          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^ev-[0-9]{4}$"}},
           "status": {"enum": ["active", "conflicted", "deprecated"]}
         },
         "additionalProperties": false
