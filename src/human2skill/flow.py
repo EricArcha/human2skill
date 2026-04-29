@@ -137,3 +137,54 @@ def build_from_distillation(
         "variants": variants,
         "snapshot": snapshot,
     }
+
+
+def detect_update_conflicts(pack: dict) -> dict:
+    """Check the evidence pack for conflicts that block an incremental update.
+
+    Any conflict with ``resolution == "halt_for_review"`` causes the update
+    to be halted.  Returns a dict with two keys:
+
+    * ``halted`` (bool) -- whether the update should be blocked
+    * ``conflicts`` (list[dict]) -- the blocking conflict records
+    """
+    blocking = [
+        c for c in pack.get("conflicts", [])
+        if c.get("resolution") == "halt_for_review"
+    ]
+    return {
+        "halted": len(blocking) > 0,
+        "conflicts": blocking,
+    }
+
+
+def summarize_update(
+    added_sources: list[str],
+    changed_claims: list[str],
+    conflicts: list[str],
+) -> str:
+    """Produce a short Markdown summary of an incremental update.
+
+    Each argument is a list of human-readable identifiers.
+    """
+    lines: list[str] = []
+
+    if added_sources:
+        lines.append("## 新增来源")
+        for src in added_sources:
+            lines.append(f"- {src}")
+        lines.append("")
+
+    if changed_claims:
+        lines.append("## 变更声明")
+        for claim in changed_claims:
+            lines.append(f"- {claim}")
+        lines.append("")
+
+    if conflicts:
+        lines.append("## 冲突")
+        for conflict in conflicts:
+            lines.append(f"- {conflict}")
+        lines.append("")
+
+    return "\n".join(lines).rstrip()
