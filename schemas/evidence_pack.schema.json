@@ -58,7 +58,7 @@
             "items": {"type": "string", "pattern": "^ev-[0-9]{4}$"}
           },
           "conflict_type": {"enum": ["temporal", "contextual", "observer_conflict", "inherent_tension"]},
-          "resolution": {"type": "string"},
+          "resolution": {"enum": ["halt_for_review", "keep_both_with_scope", "mark_low_confidence"]},
           "note": {"type": "string"}
         },
         "additionalProperties": false

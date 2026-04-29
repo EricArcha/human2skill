@@ -136,3 +136,89 @@ def test_export_manifest_accepts_codex_manifest():
         "review_passed": True,
         "privacy_check_passed": True
     })
+
+
+def test_source_index_rejects_invalid_source_id():
+    with pytest.raises(Exception):
+        validate_document("source_index.schema.json", {
+            "schema_version": "1",
+            "person_slug": "li-ming",
+            "sources": [{
+                "source_id": "bad-id",
+                "source_kind": "manual_text",
+                "title": "test",
+                "provided_by": "user",
+                "retention": "summary_only",
+                "contains_private_data": True,
+                "allowed_in_public_skill": False,
+                "summary": "test",
+                "created_at": "2026-04-29T00:00:00+00:00"
+            }]
+        })
+
+
+def test_source_index_rejects_invalid_retention():
+    with pytest.raises(Exception):
+        validate_document("source_index.schema.json", {
+            "schema_version": "1",
+            "person_slug": "li-ming",
+            "sources": [{
+                "source_id": "src-0001",
+                "source_kind": "manual_text",
+                "title": "test",
+                "provided_by": "user",
+                "retention": "full_raw",
+                "contains_private_data": True,
+                "allowed_in_public_skill": False,
+                "summary": "test",
+                "created_at": "2026-04-29T00:00:00+00:00"
+            }]
+        })
+
+
+def test_distillation_rejects_missing_section():
+    with pytest.raises(Exception):
+        validate_document("distillation.schema.json", {
+            "schema_version": "1",
+            "person_slug": "li-ming",
+            "generated_at": "2026-04-29T00:00:00+00:00",
+            "source_evidence_pack_version": "v1"
+        })
+
+
+def test_review_report_rejects_out_of_range_score():
+    with pytest.raises(Exception):
+        validate_document("review_report.schema.json", {
+            "schema_version": "1",
+            "person_slug": "li-ming",
+            "variant": "advisor",
+            "generated_at": "2026-04-29T00:00:00+00:00",
+            "passed": True,
+            "hard_failures": [],
+            "scores": {
+                "evidence_consistency": 0,
+                "confidence_calibration": 4,
+                "honest_boundary": 5,
+                "privacy_safety": 5,
+                "expression_similarity": 4,
+                "thinking_utility": 4,
+                "profile_fit": 4
+            },
+            "required_changes": [],
+            "notes": []
+        })
+
+
+def test_export_manifest_rejects_unknown_host():
+    with pytest.raises(Exception):
+        validate_document("export_manifest.schema.json", {
+            "schema_version": "1",
+            "host": "unknown",
+            "person_slug": "li-ming",
+            "variant": "advisor",
+            "created_at": "2026-04-29T00:00:00+00:00",
+            "files": ["SKILL.md"],
+            "install_hint": "~/.codex/skills/li-ming",
+            "review_passed": True,
+            "privacy_check_passed": True
+        })
