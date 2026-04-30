@@ -2,11 +2,43 @@
 
 [中文说明](README.zh-CN.md)
 
-human2skill distills limited private source material and adaptive interviews about a real person into a reusable "perspective advisor" Skill. The generated public `SKILL.md` is backed by a private evidence pack, while raw private material stays outside distributable outputs.
+## I just want to use it
 
-The current implementation targets personally known people: colleagues, collaborators, friends, family members, mentors, experts, and self/future-self use cases. It is not designed for impersonating public figures.
+human2skill is a meta-skill that distills limited private source material and adaptive interviews about a real person into a reusable "perspective advisor" Skill. The output is an installable `SKILL.md` backed by a private evidence pack. Raw private material stays outside distributable outputs.
 
-## What Is Implemented
+### Quick start
+
+Pick your AI tool:
+
+**Claude Code:**
+```bash
+cp -r exports/claude-code ~/.claude/skills/human2skill
+```
+Then type **human2skill** in Claude Code to start.
+
+**OpenClaw:**
+```bash
+cp -r exports/openclaw ~/.openclaw/skills/human2skill
+```
+Then type **human2skill** in OpenClaw to start.
+
+**Trigger phrases** (works in both Claude Code and OpenClaw):
+- `human2skill`
+- `人物蒸馏`
+- `创建人物 Skill`
+- `更新人物视角`
+
+The meta-skill will guide you through the full flow: choose a profile (colleague, relationship, mentor, or self), ingest source material, run adaptive interviews, build structured evidence, and generate a reviewed, exportable Skill.
+
+For more details, see [human2skill-meta/README.md](human2skill-meta/README.md).
+
+---
+
+## I want to develop or use the CLI
+
+human2skill is also a Python CLI that powers the meta-skill workflow. The current implementation targets personally known people: colleagues, collaborators, friends, family members, mentors, experts, and self/future-self use cases. It is not designed for impersonating public figures.
+
+### What Is Implemented
 
 The merged P0-P2 system includes:
 
@@ -26,7 +58,7 @@ The merged P0-P2 system includes:
 
 Important boundary: human2skill does not fully synthesize a person's perspective from raw material by itself. A host agent still prepares `private_evidence/distillation.json`; Python owns validation, rendering, review, export, install, and durable state.
 
-## Repository Layout
+### Repository Layout
 
 ```text
 src/human2skill/          Python package and CLI implementation
@@ -34,6 +66,7 @@ src/human2skill/schemas/  Bundled JSON Schemas
 src/human2skill/templates/ Bundled profile and skill templates
 tests/                    Pytest suite
 examples/                 Generated sample people and exported skills
+exports/                  Ready-to-install meta-skill packages for each host
 docs/                     Product, architecture, quality, and planning docs
 human2skill-meta/         Meta-skill documentation
 zg-strategy-distillation/ Existing reference skill kept in this repository
@@ -41,7 +74,7 @@ zg-strategy-distillation/ Existing reference skill kept in this repository
 
 Local-only directories such as `.venv/`, `.pytest_cache/`, `.worktrees/`, `build/`, `dist/`, `.claude/`, and `references/repos/` are ignored.
 
-## Install
+### Install
 
 Use Python 3.11 or newer.
 
@@ -58,7 +91,7 @@ human2skill --help
 
 For active source editing, tests also work directly from the checkout because `pyproject.toml` configures `src` as pytest's import path. Reinstall the package after CLI or package metadata changes.
 
-## CLI Flow
+### CLI Flow
 
 Create a person project:
 
@@ -126,7 +159,7 @@ human2skill install \
 
 Supported hosts are defined in `src/human2skill/constants.py`: `codex`, `claude-code`, `openclaw`, and `hermes`.
 
-## Programmatic Use
+### Programmatic Use
 
 ```python
 from pathlib import Path
@@ -154,7 +187,7 @@ ingest_file(base, Path("notes/li-ming.md"))
 # export_dir = export_skill(base, host="codex", variant="advisor")
 ```
 
-## Quality And Privacy Gates
+### Quality And Privacy Gates
 
 Generated skills are perspective advisors, not impersonations. Public skill output must include disclaimers and honest boundaries.
 
@@ -174,7 +207,7 @@ Conflict semantics:
 - `halt_for_review` blocks build/review flow.
 - `keep_both_with_scope` and `mark_low_confidence` are accepted conflict resolutions and do not fail review by themselves.
 
-## Examples
+### Examples
 
 The repository includes sample people:
 
@@ -184,7 +217,7 @@ The repository includes sample people:
 
 Each example includes private evidence artifacts, generated public skills, review reports, exports, and version snapshots. These are fixtures for understanding the durable file layout and for regression tests.
 
-## Development
+### Development
 
 Run the full suite:
 
@@ -200,7 +233,7 @@ Build a wheel:
 
 The wheel should contain bundled schemas and templates from `src/human2skill/schemas/` and `src/human2skill/templates/`.
 
-## Known Limits
+### Known Limits
 
 - Distillation synthesis is still agent-assisted.
 - The reviewer is deterministic but heuristic; it enforces thresholds, not semantic omniscience.

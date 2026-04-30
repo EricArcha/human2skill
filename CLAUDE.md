@@ -41,7 +41,7 @@ The system is implemented as a local-first seven-module pipeline. P0-P2 currentl
 | 4 | Adaptive Interviewer | implemented | `src/human2skill/interview.py` |
 | 5 | Evidence Pack Builder | implemented | `src/human2skill/evidence_builder.py`, `src/human2skill/evidence.py` |
 | 6 | Distillation Engine | validation and mapping implemented; synthesis remains agent-assisted | `src/human2skill/distillation.py` |
-| 7 | Skill Generator + Reviewer + Evolution | implemented for P0-P2 | `src/human2skill/generator.py`, `src/human2skill/reviewer.py`, `src/human2skill/exporter.py`, `src/human2skill/installer.py`, `src/human2skill/storage.py` |
+| 7 | Skill Generator + Reviewer + Evolution | implemented for P0-P2 | `src/human2skill/generator.py`, `src/human2skill/reviewer.py`, `src/human2skill/scenario.py`, `src/human2skill/exporter.py`, `src/human2skill/installer.py`, `src/human2skill/storage.py` |
 
 **Implemented modules** (`src/human2skill/`):
 - `cli.py` — command entrypoint for `create`, `ingest`, `question`, `build`, `review`, `export`, and `install`.
@@ -52,7 +52,11 @@ The system is implemented as a local-first seven-module pipeline. P0-P2 currentl
 - `interview.py` — coverage map and gap-driven Chinese question selection.
 - `distillation.py` — validates distillation JSON against schemas and evidence claim IDs, formats sections, detects overconfident distillation items.
 - `generator.py` — renders advisor and first-person `SKILL.md` variants from bundled templates.
-- `reviewer.py` — structured review with hard failures plus score thresholds for evidence consistency, calibration, boundaries, privacy, expression, thinking utility, and profile fit.
+- `reviewer.py` — structured review with hard failures plus 1-5 score thresholds (evidence consistency ≥4, calibration ≥4, boundaries ≥5, privacy ≥5, expression ≥4, thinking utility ≥4, profile fit ≥4).
+- `scenario.py` — scenario replay report across three required types (historical, counterfactual, boundary); passes only when all scenarios pass and all types are present.
+- `schemas.py` — JSON Schema loading and validation via `importlib.resources`, used by reviewer and evidence pack builder to validate outputs.
+- `constants.py` — enumerations for profile types, voice modes, retention policies, hosts, source kinds, claim types, conflict types, and review score keys.
+- `timeutils.py` — `utc_now_iso()` helper for consistent UTC timestamps.
 - `exporter.py` / `installer.py` — variant-specific export gates and host install helpers.
 - `storage.py` — person directory initialization, JSON writing, and version snapshots.
 
@@ -68,10 +72,12 @@ The system is implemented as a local-first seven-module pipeline. P0-P2 currentl
 - **Variant-specific export**: `advisor` and `first_person` exports require their matching review report to pass.
 - **Multi-host**: core is host-neutral; current host list is defined in `src/human2skill/constants.py`.
 - **Incremental evolution**: accepted conflicts may be scoped or marked low-confidence; only `halt_for_review` blocks build/review flow.
+- **Version snapshots are gated**: `build_from_distillation` only creates a version snapshot when all variant reviews pass. This ensures every snapshot represents a passing state.
+- **CLI build `--distillation` flag**: the `build` command accepts an optional `--distillation` path, defaulting to `private_evidence/distillation.json`.
 
 ## Current Implementation State
 
-**P0-P2 implementation is merged locally.** The current suite has 131 pytest tests covering schemas, profile/template resources, intake, ingest, evidence building, distillation validation, generation, structured review, export/install, CLI flow, examples, and update conflict handling.
+**P0-P2 implementation is merged locally.** The current suite has 132 pytest tests covering schemas, profile/template resources, intake, ingest, evidence building, distillation validation, generation, structured review, export/install, CLI flow, examples, and update conflict handling.
 
 **Known boundary:** distillation synthesis is still agent-assisted through `distillation.json`; Python validates and renders durable artifacts but does not independently infer all human perspective content from raw sources.
 
