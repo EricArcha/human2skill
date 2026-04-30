@@ -532,3 +532,61 @@ def test_cli_review_command(tmp_path: Path):
     # Review summary should exist
     review = json.loads(result.stdout)
     assert "passed" in review
+
+
+def test_cli_review_command_can_select_variant(tmp_path: Path):
+    from human2skill.flow import create_project_person
+    from human2skill.storage import write_json
+
+    base = create_project_person(
+        root=tmp_path,
+        slug="li-ming",
+        display_name="李明",
+        profile_type="colleague",
+        relationship_to_user="coworker",
+        use_case="work review",
+        voice_mode="both",
+        now="2026-05-01T00:00:00+00:00",
+    )
+
+    def review_payload(variant: str, passed: bool) -> dict:
+        return {
+            "schema_version": "1",
+            "person_slug": "li-ming",
+            "variant": variant,
+            "generated_at": "2026-05-01T00:00:00+00:00",
+            "passed": passed,
+            "hard_failures": [],
+            "scores": {
+                "evidence_consistency": 4,
+                "confidence_calibration": 4,
+                "honest_boundary": 5,
+                "privacy_safety": 5,
+                "expression_similarity": 4,
+                "thinking_utility": 4,
+                "profile_fit": 4,
+            },
+            "required_changes": [],
+            "notes": [],
+        }
+
+    write_json(
+        base / "private_evidence/reviews/advisor.json",
+        review_payload("advisor", True),
+    )
+    write_json(
+        base / "private_evidence/reviews/first_person.json",
+        review_payload("first_person", False),
+    )
+
+    result = run_cli(
+        "review",
+        "--root", str(tmp_path),
+        "--slug", "li-ming",
+        "--variant", "first_person",
+        cwd=tmp_path,
+    )
+
+    review = json.loads(result.stdout)
+    assert review["variant"] == "first_person"
+    assert review["passed"] is False

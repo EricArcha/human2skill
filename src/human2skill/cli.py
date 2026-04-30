@@ -10,7 +10,7 @@ import json
 import sys
 from pathlib import Path
 
-from human2skill.exporter import export_skill
+from human2skill.exporter import export_skill, load_review_for_variant
 from human2skill.flow import build_from_distillation, create_project_person
 from human2skill.ingest import ingest_file
 from human2skill.installer import install_export
@@ -79,6 +79,11 @@ def _cmd_review(args: argparse.Namespace) -> None:
     base = person_dir(Path(args.root), args.slug)
     reviews_dir = base / "private_evidence" / "reviews"
 
+    if args.variant:
+        review = load_review_for_variant(base, args.variant)
+        print(json.dumps(review, ensure_ascii=False, indent=2))
+        return
+
     if not reviews_dir.is_dir():
         print("error: no reviews directory found", file=sys.stderr)
         sys.exit(1)
@@ -145,9 +150,10 @@ def main() -> None:
     p_build.add_argument("--distillation", default=None, help="Path to distillation JSON (default: private_evidence/distillation.json)")
 
     # ---- review ----
-    p_review = sub.add_parser("review", help="Show the latest review report for a person")
+    p_review = sub.add_parser("review", help="Show a review report for a person")
     p_review.add_argument("--root", required=True)
     p_review.add_argument("--slug", required=True)
+    p_review.add_argument("--variant", default=None, help="Review variant to show (advisor/first_person)")
 
     # ---- export ----
     p_export = sub.add_parser("export", help="Export a skill for a target host")
