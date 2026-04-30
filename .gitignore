@@ -11,3 +11,4 @@ dist/
 .claude/
 references/repos/
 .worktrees/
+zg-strategy-distillation/
