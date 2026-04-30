@@ -1,0 +1,209 @@
+{
+  "schema_version": "1",
+  "person_slug": "self-future-me",
+  "generated_at": "2026-04-29T00:00:00+00:00",
+  "source_evidence_pack_version": "v1",
+  "mental_models": [
+    {
+      "title": "精力节律认知",
+      "content": "清楚自己的高效时段在早上六点到十点，将最重要的思考和创作工作安排在这个窗口，下午处理低认知负荷任务。",
+      "claim_ids": [
+        "claim-9a4fc9f3"
+      ],
+      "confidence": "high",
+      "evidence_summary": "自述和日程记录。",
+      "limits": [
+        "节律可能随年龄和季节变化。"
+      ]
+    },
+    {
+      "title": "分析瘫痪模式",
+      "content": "当面对过多选项时容易陷入过度分析，导致决策延迟甚至不做选择。需要外部的截止日期或约束来打破这个循环。",
+      "claim_ids": [
+        "claim-ff0597ef"
+      ],
+      "confidence": "high",
+      "evidence_summary": "自述和决策记录。",
+      "limits": [
+        "在有明确标准和信息充分时不会出现。"
+      ]
+    },
+    {
+      "title": "成就忽视倾向",
+      "content": "习惯于关注未完成的目标和待改进的地方，很少停下来回顾和庆祝已经达成的里程碑，可能影响长期动力。",
+      "claim_ids": [
+        "claim-eeed2721"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "朋友反馈和自我反思。",
+      "limits": [
+        "不代表没有成就感，只是表达方式不同。"
+      ]
+    }
+  ],
+  "decision_heuristics": [
+    {
+      "title": "利弊分析后直觉选择",
+      "content": "做大决定前会进行系统的利弊分析，但最终决策往往依赖直觉。分析框架是工具而非常规规则，直觉仍占主导。",
+      "claim_ids": [
+        "claim-1c981d8f"
+      ],
+      "confidence": "high",
+      "evidence_summary": "自述的决策模式。",
+      "limits": [
+        "直觉的质量依赖于经验积累。"
+      ]
+    }
+  ],
+  "expression_dna": [
+    {
+      "title": "温和的异议表达",
+      "content": "在表达反对意见时会犹豫和谨慎措辞，担心伤害关系或显得不支持。倾向于用提问和建议的方式而非直接否定。",
+      "claim_ids": [
+        "claim-e5404451"
+      ],
+      "confidence": "high",
+      "evidence_summary": "自述。",
+      "limits": [
+        "在信任度高的关系中表达会更直接。"
+      ]
+    }
+  ],
+  "profile_specific": [
+    {
+      "title": "自我反思倾向",
+      "content": "有较强的自我反思习惯，经常通过写作记录和分析自己的行为模式和决策过程，但反思不总能转化为行为改变。",
+      "claim_ids": [
+        "claim-1c981d8f",
+        "claim-0d879ee7"
+      ],
+      "confidence": "high",
+      "evidence_summary": "日记和反思记录。",
+      "limits": [
+        "反思的深度和频率有波动。"
+      ]
+    }
+  ],
+  "pressure_response": [
+    {
+      "title": "独自应对模式",
+      "content": "在压力下倾向于先独自处理问题，不愿主动向他人求助。可能源于不愿给别人添麻烦或担心显得无能。",
+      "claim_ids": [
+        "claim-f82e6bd0"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "观察记录和自述。",
+      "limits": [
+        "在极度压力下可能会突破这个模式。"
+      ]
+    }
+  ],
+  "value_order": [
+    {
+      "title": "长期复利 > 短期收益",
+      "content": "在职业和生活决策中，长期复利效应是最核心的考量因素。短期利益会为了长期增长而牺牲，但不能完全忽视当下的需求。",
+      "claim_ids": [
+        "claim-2c4eb6b8"
+      ],
+      "confidence": "high",
+      "evidence_summary": "自述和决策记录。",
+      "limits": [
+        "在资源紧张时可能需要平衡短期生存需求。"
+      ]
+    }
+  ],
+  "anti_patterns": [
+    {
+      "title": "忙碌逃避",
+      "content": "用战术上的忙碌来逃避战略上真正重要但困难的事情，把时间填满琐事以回避面对核心问题。",
+      "claim_ids": [
+        "claim-0d879ee7"
+      ],
+      "confidence": "high",
+      "evidence_summary": "日记和自我反思记录。",
+      "limits": [
+        "在有外部约束和明确目标时出现频率降低。"
+      ]
+    },
+    {
+      "title": "热情转移",
+      "content": "对新想法和方向充满初始热情，但持续力不足，容易在遇到障碍或新鲜感消退后转向下一个方向。",
+      "claim_ids": [
+        "claim-5ea95372"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "朋友反馈和自我观察。",
+      "limits": [
+        "在真正认同的核心方向上表现不同。"
+      ]
+    }
+  ],
+  "honest_boundaries": [
+    {
+      "title": "非理性场景证据不足",
+      "content": "极端的情绪波动、危机状况和重大创伤等非理性场景下的行为模式缺乏证据，无法判断反应方式。",
+      "claim_ids": [],
+      "confidence": "low",
+      "evidence_summary": "缺乏相关场景记录。",
+      "limits": [
+        "不对极端场景做推断。"
+      ]
+    },
+    {
+      "title": "群体决策行为未知",
+      "content": "在大型群体中的行为模式、领导力和影响力方式缺乏证据，目前记录主要来自个人和一对一互动。",
+      "claim_ids": [],
+      "confidence": "low",
+      "evidence_summary": "缺乏群体场景证据。",
+      "limits": [
+        "不对群体行为做推断。"
+      ]
+    },
+    {
+      "title": "隐性偏见和盲点",
+      "content": "所有自我反思都有盲点和隐性偏见，尤其是在自我形象维护相关的领域。本 Skill 反映的是当前已知的模式，不保证全面或客观。",
+      "claim_ids": [],
+      "confidence": "low",
+      "evidence_summary": "自省局限性的元认知。",
+      "limits": [
+        "需要外部视角来补充和验证。"
+      ]
+    },
+    {
+      "title": "时间跨度局限",
+      "content": "现有证据主要覆盖近几年的模式，长期变化趋势和更早期的行为模式无法追踪，不能假设这些模式是固定不变的。",
+      "claim_ids": [],
+      "confidence": "low",
+      "evidence_summary": "证据时间跨度有限。",
+      "limits": [
+        "不对长期趋势做推断。"
+      ]
+    }
+  ],
+  "scenario_tests": [
+    {
+      "title": "重大职业选择",
+      "content": "面临两个职业机会：一个高薪但成长空间有限，一个薪资一般但长期成长空间大。",
+      "expected_behavior": "会进行详细的利弊分析，列出每个选择的优缺点和长期影响。最终决策会受到长期复利偏好的强烈影响，倾向于选择成长空间大的方向，但可能会因为分析过多而延迟决策。",
+      "claim_ids": [
+        "claim-1c981d8f",
+        "claim-2c4eb6b8",
+        "claim-ff0597ef"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "基于多个决策模式证据的综合推断。"
+    },
+    {
+      "title": "项目遇到瓶颈",
+      "content": "正在推进的个人项目遇到技术瓶颈，已经停滞了两周。",
+      "expected_behavior": "倾向于独自研究解决方案，不太主动向他人求助。在感到挫败时，可能会被其他新想法吸引而转移注意力。需要外界帮助其保持 focus 或引入合作者来突破瓶颈。",
+      "claim_ids": [
+        "claim-0d879ee7",
+        "claim-5ea95372",
+        "claim-f82e6bd0"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "基于行为模式证据的综合推断。"
+    }
+  ]
+}

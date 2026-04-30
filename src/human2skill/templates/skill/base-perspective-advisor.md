@@ -35,6 +35,14 @@ user-invocable: true
 
 {pressure_response}
 
+## 价值排序
+
+{value_order}
+
+## 反模式
+
+{anti_patterns}
+
 ## 诚实边界
 
 {honest_boundaries}

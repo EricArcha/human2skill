@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "host", "person_slug", "variant", "created_at", "files", "install_hint", "review_passed", "privacy_check_passed"],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "host": {"enum": ["codex", "claude-code", "openclaw", "hermes"]},
+    "person_slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "variant": {"enum": ["advisor", "first_person"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "files": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "install_hint": {"type": "string"},
+    "review_passed": {"type": "boolean"},
+    "privacy_check_passed": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

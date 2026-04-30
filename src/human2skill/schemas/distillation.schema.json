@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "person_slug", "generated_at", "source_evidence_pack_version", "mental_models", "decision_heuristics", "expression_dna", "profile_specific", "pressure_response", "value_order", "anti_patterns", "honest_boundaries", "scenario_tests"],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "person_slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "source_evidence_pack_version": {"type": "string", "pattern": "^v[0-9]+$"},
+    "mental_models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "decision_heuristics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "expression_dna": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "profile_specific": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pressure_response": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "value_order": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "anti_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "honest_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "confidence"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"},
+          "limits": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "scenario_tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "expected_behavior"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "expected_behavior": {"type": "string"},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "evidence_summary": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

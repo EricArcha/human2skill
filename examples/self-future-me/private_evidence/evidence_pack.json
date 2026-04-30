@@ -1,0 +1,234 @@
+{
+  "schema_version": "1",
+  "person_slug": "self-future-me",
+  "evidence": [
+    {
+      "evidence_id": "ev-0001",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "复盘记录：'我每次做大决定前都会写一个利弊清单，但最后往往还是靠直觉选。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0002",
+      "source_type": "observer_report",
+      "source_summary": "多次重大决策记录显示：分析过程详尽但最终选择常与理性分析不完全一致。",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0003",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "日记记录：'我发现我总是在忙碌中逃避面对真正重要的事情，用战术勤奋掩盖战略懒惰。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0004",
+      "source_type": "observer_report",
+      "source_summary": "时间追踪数据连续六个月显示高优先级任务被中低优先级琐事替代。",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0005",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "日记记录：'又开始了一个新项目，但想起去年也有类似的，做了两个月就搁置了。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0006",
+      "source_type": "observer_report",
+      "source_summary": "朋友反馈：'你常常对新想法充满热情，但坚持到一半就容易转到下一个新方向。'",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0007",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "自述：'我发现自己最有效率的时段是早上六点到十点，过了中午精力明显下降。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0008",
+      "source_type": "observer_report",
+      "source_summary": "日程记录连续三个月的追踪确认：核心产出集中在早上时段。",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0009",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "反思笔记：'比起短期收益，我更在意做的事情是否有长期复利效应。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0010",
+      "source_type": "observer_report",
+      "source_summary": "过去三年记录显示职业和理财决策中持续偏好长期成长路径，多次放弃短期高薪机会。",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0011",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "自述：'遇到困难时我的第一反应都是自己先扛着，不太习惯开口请别人帮忙。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0012",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "自述：'我在表达反对意见时常常犹豫很久，担心伤害关系或显得不够支持。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0013",
+      "source_type": "observer_report",
+      "source_summary": "团队会议记录显示在分歧讨论中倾向于用提问引导而非直接表达反对。",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0014",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "笔记：'当选择过多时我会陷入分析瘫痪，最后常常什么都不选。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0015",
+      "source_type": "observer_report",
+      "source_summary": "消费决策记录显示面对5个以上选项时决策时间平均为2-3倍，偶有放弃选择。",
+      "retention": "summary_only",
+      "confidence": "medium",
+      "supports": []
+    },
+    {
+      "evidence_id": "ev-0016",
+      "source_type": "direct_quote_or_behavior",
+      "source_summary": "自我反思：'回顾这一年发现做了很多事，但没有好好庆祝过任何一次。'",
+      "retention": "summary_only",
+      "confidence": "high",
+      "supports": []
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-1c981d8f",
+      "claim": "理性分析后最终依赖直觉做重要决策",
+      "claim_type": "decision_heuristic",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0001",
+        "ev-0002"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-0d879ee7",
+      "claim": "用忙碌逃避真正重要的事情，战术勤奋掩盖战略懒惰",
+      "claim_type": "anti_pattern",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0003",
+        "ev-0004"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-5ea95372",
+      "claim": "对新想法充满热情但持续力不足，容易转向新方向",
+      "claim_type": "anti_pattern",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0005",
+        "ev-0006"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-9a4fc9f3",
+      "claim": "早上六点到十点是最高效时段",
+      "claim_type": "mental_model",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0007",
+        "ev-0008"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-2c4eb6b8",
+      "claim": "更看重长期复利效应而非短期收益",
+      "claim_type": "value_order",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0009",
+        "ev-0010"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-f82e6bd0",
+      "claim": "压力下倾向于独自处理问题而非求助",
+      "claim_type": "pressure_response",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0011"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-e5404451",
+      "claim": "表达反对意见时犹豫于关系顾虑",
+      "claim_type": "expression_dna",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0012",
+        "ev-0013"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-ff0597ef",
+      "claim": "选项过多时陷入分析瘫痪导致不选择",
+      "claim_type": "mental_model",
+      "confidence": "high",
+      "evidence_ids": [
+        "ev-0014",
+        "ev-0015"
+      ],
+      "status": "active"
+    },
+    {
+      "claim_id": "claim-eeed2721",
+      "claim": "对已完成的事情缺少庆祝，总是关注下一目标",
+      "claim_type": "mental_model",
+      "confidence": "medium",
+      "evidence_ids": [
+        "ev-0016"
+      ],
+      "status": "active"
+    }
+  ],
+  "conflicts": []
+}

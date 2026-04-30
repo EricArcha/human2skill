@@ -33,11 +33,33 @@
         "properties": {
           "claim_id": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"},
           "claim": {"type": "string", "minLength": 1},
-          "claim_type": {"enum": ["mental_model", "decision_heuristic", "expression_dna", "profile_specific", "boundary"]},
+          "claim_type": {"enum": ["mental_model", "decision_heuristic", "expression_dna", "profile_specific", "pressure_response", "value_order", "anti_pattern", "boundary"]},
           "profile_scope": {"type": "string"},
           "confidence": {"enum": ["high", "medium", "low"]},
           "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^ev-[0-9]{4}$"}},
           "status": {"enum": ["active", "conflicted", "deprecated"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["conflict_id", "claim_ids", "evidence_ids", "conflict_type", "resolution"],
+        "properties": {
+          "conflict_id": {"type": "string", "pattern": "^cf-[0-9]{4}$"},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^ev-[0-9]{4}$"}
+          },
+          "conflict_type": {"enum": ["temporal", "contextual", "observer_conflict", "inherent_tension"]},
+          "resolution": {"enum": ["halt_for_review", "keep_both_with_scope", "mark_low_confidence"]},
+          "note": {"type": "string"}
         },
         "additionalProperties": false
       }

@@ -4,9 +4,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
-
-def load_schema(name):
-    return json.loads(Path("schemas", name).read_text(encoding="utf-8"))
+from human2skill.schemas import load_schema
 
 
 def test_person_meta_schema_accepts_minimal_valid_document():
@@ -18,6 +16,7 @@ def test_person_meta_schema_accepts_minimal_valid_document():
         "profile_type": "colleague",
         "relationship_to_user": "coworker",
         "use_case": "work perspective advisor",
+        "voice_mode": "advisor",
         "consent_status": {
             "person_consented": False,
             "distribution_allowed": False,
@@ -26,6 +25,11 @@ def test_person_meta_schema_accepts_minimal_valid_document():
         "privacy_policy": {
             "raw_retention": "summary_only",
             "public_skill_allows_private_quotes": False
+        },
+        "export_policy": {
+            "default_visibility": "private",
+            "shareable_variants": ["advisor"],
+            "requires_privacy_review": True
         },
         "lifecycle": {
             "version": "v1",
@@ -70,7 +74,7 @@ def test_evidence_pack_schema_accepts_minimal_valid_document():
     Draft202012Validator(schema).validate(document)
 
 
-@pytest.mark.parametrize("field", ["schema_version", "slug", "display_name", "profile_type", "privacy_policy", "lifecycle"])
+@pytest.mark.parametrize("field", ["schema_version", "slug", "display_name", "profile_type", "voice_mode", "privacy_policy", "export_policy", "lifecycle"])
 def test_person_meta_rejects_missing_required(field):
     schema = load_schema("person.meta.schema.json")
     document = {
@@ -80,6 +84,7 @@ def test_person_meta_rejects_missing_required(field):
         "profile_type": "colleague",
         "relationship_to_user": "coworker",
         "use_case": "work perspective advisor",
+        "voice_mode": "advisor",
         "consent_status": {
             "person_consented": False,
             "distribution_allowed": False,
@@ -88,6 +93,11 @@ def test_person_meta_rejects_missing_required(field):
         "privacy_policy": {
             "raw_retention": "summary_only",
             "public_skill_allows_private_quotes": False
+        },
+        "export_policy": {
+            "default_visibility": "private",
+            "shareable_variants": ["advisor"],
+            "requires_privacy_review": True
         },
         "lifecycle": {
             "version": "v1",
@@ -113,6 +123,7 @@ def test_person_meta_rejects_invalid_value(field, value):
         "profile_type": "colleague",
         "relationship_to_user": "coworker",
         "use_case": "work perspective advisor",
+        "voice_mode": "advisor",
         "consent_status": {
             "person_consented": False,
             "distribution_allowed": False,
@@ -121,6 +132,11 @@ def test_person_meta_rejects_invalid_value(field, value):
         "privacy_policy": {
             "raw_retention": "summary_only",
             "public_skill_allows_private_quotes": False
+        },
+        "export_policy": {
+            "default_visibility": "private",
+            "shareable_variants": ["advisor"],
+            "requires_privacy_review": True
         },
         "lifecycle": {
             "version": "v1",

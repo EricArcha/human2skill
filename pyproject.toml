@@ -1,16 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "human2skill"
 version = "0.1.0"
 description = "Distill private human perspectives into reusable skills"
 requires-python = ">=3.11"
 dependencies = [
-  "jsonschema>=4.22.0"
+  "jsonschema>=4.22.0",
+  "pypdf>=4.0.0"
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0.0"
 ]
+
+[project.scripts]
+human2skill = "human2skill.cli:main"
+
+[tool.setuptools.package-data]
+human2skill = ["schemas/*.json", "templates/*/*.md", "templates/*/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

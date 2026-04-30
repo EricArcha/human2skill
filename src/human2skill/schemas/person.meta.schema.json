@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["schema_version", "slug", "display_name", "profile_type", "privacy_policy", "lifecycle"],
+  "required": ["schema_version", "slug", "display_name", "profile_type", "voice_mode", "privacy_policy", "export_policy", "lifecycle"],
   "properties": {
     "schema_version": {"const": "1"},
     "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
@@ -9,6 +9,7 @@
     "profile_type": {"enum": ["colleague", "relationship", "mentor", "self"]},
     "relationship_to_user": {"type": "string"},
     "use_case": {"type": "string"},
+    "voice_mode": {"enum": ["advisor", "first_person", "both"]},
     "consent_status": {
       "type": "object",
       "required": ["person_consented", "distribution_allowed"],
@@ -25,6 +26,19 @@
       "properties": {
         "raw_retention": {"enum": ["no_raw_retention", "summary_only", "local_private_raw"]},
         "public_skill_allows_private_quotes": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "export_policy": {
+      "type": "object",
+      "required": ["default_visibility", "shareable_variants", "requires_privacy_review"],
+      "properties": {
+        "default_visibility": {"enum": ["private", "shared", "public"]},
+        "shareable_variants": {
+          "type": "array",
+          "items": {"enum": ["advisor", "first_person"]}
+        },
+        "requires_privacy_review": {"type": "boolean"}
       },
       "additionalProperties": false
     },
