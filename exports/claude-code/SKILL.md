@@ -252,7 +252,7 @@ Skill 命名格式：`{slug}-lens`
 
 #### 4.1 自动化品质检查
 
-运行 `scripts/quality_check.py` 对生成的 SKILL.md 执行 6 项检查：
+运行 `scripts/quality_check.py` 对生成的 SKILL.md 执行 7 项检查：
 
 | 检查项 | 通过标准 |
 |--------|---------|
@@ -261,7 +261,8 @@ Skill 命名格式：`{slug}-lens`
 | 表达 DNA 辨识度 | ≥3 项特征标记 |
 | 诚实边界 | ≥3 条具体局限 |
 | 内在张力 | ≥2 处矛盾/冲突 |
-| 一手来源占比 | >50%（当有 corpus 时） |
+| 一手来源占比 | >50%。优先读取 `corpus/index.json` 中的真实来源类型统计；无 corpus 时回退到 SKILL.md 关键词匹配 |
+| 原文归档 | `corpus/index.json` 存在且每个来源有对应原文文件 |
 
 ```bash
 .venv/bin/python scripts/quality_check.py outputs/zhang-san/public_skill/SKILL.md

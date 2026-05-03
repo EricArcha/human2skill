@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLI choices 验证：`--profile`、`--voice-mode`、`--perspective`、`--host`、`--variant` 增加 argparse choices。
 - CLI 集中错误处理：`_handle_error()` 统一错误输出。
 - `GOVERNANCE.md`：治理文档，记录护栏规则、验证标准、命名约定和变更影响矩阵。
+- **Repo-as-skill 安装**：根目录 `SKILL.md` + `INSTALL.md` + `Makefile`，`git clone` 即用。
+- **README 徽章**：Python、版本、License、AgentSkills 四个 shields.io 徽章。
+- **文档签名**：所有主要文档末尾添加 `Created by Eric · human2skill` 签名。
+- **模板溯源签名**：生成的 Skill 模板末尾携带 `本 Skill 由 human2skill 生成` 签名。
+- **quality_check.py 原文归档检查**：第 7 项检查读取 `corpus/index.json` 验证原文归档完整性，一手来源占比优先使用 corpus 数据而非关键词匹配。
 
 ### Changed
 - **Skill 命名**：`{slug}-perspective` → `{slug}-lens`（`generator.py`）。
