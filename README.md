@@ -241,7 +241,7 @@ git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2
 - [x] 4 种 profile 类型（同事 / 关系 / 导师 / 自己）
 - [x] 多宿主导出（Claude Code / OpenClaw / Codex / Hermes）
 - [x] 3 个完整虚构示例人物
-- [x] 增量更新模式 + slug 去重保护（参考 nuwa-skill）
+- [x] 增量更新模式 + slug 去重保护
 - [ ] P3 多人物交叉视角
 - [ ] P3 公开人物语料库
 - [ ] P3 Web UI
