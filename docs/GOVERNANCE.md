@@ -190,30 +190,64 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 
 ---
 
-## 5. 变更流程
+## 5. 变更流程与同步检查清单
 
-### 5.1 修改护栏规则
+### 5.1 核心原则
 
-1. 在 `docs/GOVERNANCE.md` 中描述变更和理由
-2. 更新对应的 Python 代码（`constants.py`、`flow.py` 等）
-3. 更新 `human2skill-meta/SKILL.md` 如有流程变更
+**改一查三，清单勾，不靠记忆。**
+
+本仓库的单一事实源分散在多个文件中（Python 代码、模板、meta-skill、README、GOVERNANCE）。每次修改任何源后，必须按矩阵检查所有受影响的下游文件。v2.0.0 审计发现的 12 个问题中有 4 个是"改了代码忘了同步文档"导致的。
+
+### 5.2 变更影响矩阵
+
+按变更类型查表，逐项检查 `→` 右边的文件是否需同步更新。
+
+| 变更类型 | 单一事实源 | 需同步/检查的下游文件 |
+|---------|-----------|---------------------|
+| **版本号** | `pyproject.toml` | `src/human2skill/__init__.py`（`__version__`）、`CHANGELOG.md`（新增版本条目）、`tests/test_import.py`（断言值） |
+| **常量/阈值** | `constants.py` | `reviewer.py`（`REVIEW_PASS_THRESHOLDS`）、`quality_check.py`（对应检查项）、`GOVERNANCE.md §2`（阈值描述）、`CLAUDE.md`（如有提及） |
+| **数据模型/路径** | `storage.py` | `flow.py`、`cli.py`、`exporter.py`、`ingest.py`（所有引用 `person_dir` 或 `outputs/` 的文件）；`README.md`、`human2skill-meta/SKILL.md`（目录结构图） |
+| **命名规则** | `generator.py`（`{slug}-lens`） | `templates/skill/*.md`（`{skill_name}` 占位符）、`README.md`（示例）、`GOVERNANCE.md §3.1`、所有 `examples/` 中的 SKILL.md |
+| **访谈规则** | `interview.py` | `GOVERNANCE.md §1.5`、`docs/design/adaptive-interview.md`、`docs/README.md`、`human2skill-meta/SKILL.md`（Phase 1 描述） |
+| **验证逻辑** | `reviewer.py` | `flow.py`（`build_from_distillation` 调用）、`quality_check.py`（6 项检查）、`GOVERNANCE.md §2`、`human2skill-meta/SKILL.md`（Phase 4 描述） |
+| **Meta-skill 流程** | `human2skill-meta/SKILL.md` | 根目录 `SKILL.md`、`exports/claude-code/SKILL.md`、`exports/openclaw/SKILL.md`（全部同步副本） |
+| **CLI 参数** | `cli.py` | `INSTALL.md`（示例命令）、`README.md`（快速开始节）、`human2skill-meta/SKILL.md`（Phase 中的命令示例） |
+| **模板内容** | `templates/skill/*.md` | `generator.py`（`render_skill_variant` 中的格式化字段）、`templates/skill/` 中另一个变体（advisor ↔ first_person 同步）、已生成的示例人物 SKILL.md（`examples/` 和 `outputs/`） |
+| **新增/删除文件** | 文件系统 | `pyproject.toml`（`packages` 配置如需要）、`.gitignore`（防止误提交）、`README.md`（如影响目录结构）、`GOVERNANCE.md §3`（如影响约定）、`human2skill-meta/SKILL.md`（相关文件节） |
+| **安装方式** | `INSTALL.md` | `README.md`（快速开始）、`Makefile`（如有命令变更）、任何引用旧安装方式的文档 |
+| **隐私/安全规则** | `constants.py`（`PRIVATE_MARKERS`） | `ingest.py`（`_scan_for_pii`）、`reviewer.py`（`structured_review`）、`exporter.py`（`_privacy_check_passed`）、`GOVERNANCE.md §4` |
+| **Skill 安装目录** | `~/.claude/skills/human2skill/` | `exports/`（分发副本与安装目录内容一致）、`INSTALL.md`（安装命令指向正确源） |
+
+### 5.3 使用方式
+
+1. 确定变更属于上述哪种类型。
+2. 逐行检查 `→` 右侧的每个文件，打开确认是否需要同步。
+3. 修改后运行 `make test`（或 `python -m pytest`），确保 132 tests 通过。
+4. `git diff --stat` 确认变更范围与预期一致。
+5. 在 commit message 中注明跨文件同步（例：`fix: bump threshold, sync GOVERNANCE and CLAUDE.md`）。
+
+### 5.4 修改护栏规则（详细流程）
+
+1. 在 `constants.py` 中修改常量（如有）
+2. 在 `docs/GOVERNANCE.md` 中描述变更和理由
+3. 查 §5.2 矩阵中"常量/阈值"和"验证逻辑"两行，同步所有下游文件
 4. 更新 `CHANGELOG.md`
-5. 运行 `python -m pytest` 确认无回归
+5. 运行 `make test` 确认无回归
 
-### 5.2 新增 Profile 类型
+### 5.5 新增 Profile 类型（详细流程）
 
 1. 在 `constants.py` 的 `PROFILE_TYPES` 中新增
 2. 在 `templates/profiles/` 中新增对应的 JSON 文件
 3. 在 `interview.py` 的 `PROFILE_QUESTIONS` 中新增该类型的面试问题
 4. 在 `profiles.py` 的 `infer_profile_type()` 中新增推断关键词
-5. 更新 meta-skill 的 Profile 表格
+5. 查 §5.2 矩阵中"Meta-skill 流程"行，同步所有 SKILL.md 副本中的 Profile 表格
 6. 新增测试
 
-### 5.3 修改验证标准
+### 5.6 修改验证标准（详细流程）
 
 1. 在 `reviewer.py` 的 `REVIEW_PASS_THRESHOLDS` 中修改阈值
 2. 在 `scripts/quality_check.py` 中同步更新对应的检查逻辑
-3. 更新本文件的第 2 节
+3. 查 §5.2 矩阵中"验证逻辑"行，同步 `GOVERNANCE.md §2` 和 meta-skill Phase 4 描述
 4. 用实际的 SKILL.md 测试新旧阈值效果
 
 
