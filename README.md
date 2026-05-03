@@ -30,31 +30,39 @@
 
 ---
 
-## 目录
+## 开始使用
 
-- [5 分钟快速体验](#5-分钟快速体验)
-- [20 问快速蒸馏](#20-问快速蒸馏)
-- [它能解决什么问题？](#它能解决什么问题)
-- [和同类选择有什么不同？](#和同类选择有什么不同)
-- [它蒸馏什么？](#它蒸馏什么)
-- [你会得到什么？](#你会得到什么)
-- [看看实际产出](#看看实际产出)
-- [快速开始](#快速开始)
-- [路线图](#路线图)
-- [开发者入口](#开发者入口)
-
----
-
-## 5 分钟快速体验
-
-```text
-1. npx skills add EricArcha/human2skill
-2. 在 Claude Code 中输入 /human2skill Q20
-3. 回答 15-20 分钟的问题（随时输入 done 退出）
-4. 得到一个可安装的视角顾问 Skill
+```bash
+npx skills add EricArcha/human2skill
 ```
 
-不需要准备文档。不需要写提示词。坐下来回答问题就行。
+装完后在 Claude Code 中输入 `/human2skill Q20`，不到 20 分钟你就能得到一个视角顾问。
+
+输入以下触发词启动不同模式：
+
+| 触发词 | 效果 |
+|--------|------|
+| `/human2skill Q20` | 快捷入口：20 问快速蒸馏 |
+| `human2skill` | 标准入口：完整 Phase 0-5 流程 |
+| `人物蒸馏` / `创建人物 Skill` | 中文触发 |
+| `更新人物视角` | 增量更新已有 Skill |
+
+### 手动安装
+
+```bash
+# Claude Code
+git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
+# OpenClaw
+git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
+```
+
+### Python CLI（按需）
+
+```bash
+pip install git+https://github.com/EricArcha/human2skill.git
+```
+
+首次使用需 Python 3.11+，Agent 会自动检测并提示安装。
 
 ---
 
@@ -199,48 +207,6 @@ outputs/{slug}/
 | [未来之我的视角顾问](examples/self-future-me/public_skill/SKILL.md) | 自己 | "用战术上的忙碌来逃避战略上真正重要的事" |
 
 自己跑一次：输入 `/human2skill`，15 分钟后你也有一个。
-
----
-
-## 快速开始
-
-### 一键安装（推荐）
-
-```bash
-npx skills add EricArcha/human2skill
-```
-
-### 手动安装
-
-**Claude Code**
-
-```bash
-git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
-```
-
-**OpenClaw**
-
-```bash
-git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
-```
-
-### Python CLI（按需）
-
-```bash
-pip install git+https://github.com/EricArcha/human2skill.git
-```
-
-然后输入以下任一触发词即可启动：
-
-| 触发词 | 效果 |
-|--------|------|
-| `/human2skill Q20` | **快捷入口**：直接启动 20 问快速蒸馏 |
-| `human2skill` | 标准入口：走完整 Phase 0-5 流程 |
-| `人物蒸馏` | 中文触发 |
-| `创建人物 Skill` | 中文触发 |
-| `更新人物视角` | 增量更新已有 Skill |
-
-首次使用需 Python 3.11+，Agent 会自动检测并提示安装。
 
 ---
 

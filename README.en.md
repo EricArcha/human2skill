@@ -32,31 +32,39 @@ It's not Li Ming. But it remembers how he thought.
 
 ---
 
-## Table of Contents
+## Get Started
 
-- [Try it in 5 minutes](#try-it-in-5-minutes)
-- [The 20 Questions experience](#the-20-questions-experience)
-- [What problems does this solve?](#what-problems-does-this-solve)
-- [How is this different?](#how-is-this-different)
-- [What does it distill?](#what-does-it-distill)
-- [What you get](#what-you-get)
-- [See actual outputs](#see-actual-outputs)
-- [Quick Start](#quick-start)
-- [Roadmap](#roadmap)
-- [For Developers](#for-developers)
-
----
-
-## Try it in 5 minutes
-
-```text
-1. npx skills add EricArcha/human2skill
-2. In Claude Code, type /human2skill Q20
-3. Answer 15-20 minutes of questions (type done to exit anytime)
-4. Get an installable perspective advisor Skill
+```bash
+npx skills add EricArcha/human2skill
 ```
 
-No documents needed. No prompt writing. Just sit down and answer questions.
+Once installed, type `/human2skill Q20` in Claude Code. In under 20 minutes you'll have a perspective advisor.
+
+Use these triggers for different modes:
+
+| Trigger | Effect |
+|---------|--------|
+| `/human2skill Q20` | Shortcut: jump straight into 20 Questions |
+| `human2skill` | Standard entry: full Phase 0-5 workflow |
+| `人物蒸馏` / `创建人物 Skill` | Chinese triggers |
+| `更新人物视角` | Incremental update for existing Skill |
+
+### Manual install
+
+```bash
+# Claude Code
+git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
+# OpenClaw
+git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
+```
+
+### Python CLI (optional)
+
+```bash
+pip install git+https://github.com/EricArcha/human2skill.git
+```
+
+Requires Python 3.11+. The Agent auto-detects and prompts for installation on first use.
 
 ---
 
@@ -202,48 +210,6 @@ The repo contains three fictional example persons, each with complete evidence p
 | [Future Me Lens](examples/self-future-me/public_skill/SKILL.md) | Self | "Using tactical busyness to avoid the strategically hard thing" |
 
 Run it yourself: type `/human2skill`. In 15 minutes, you'll have one too.
-
----
-
-## Quick Start
-
-### One-click install (recommended)
-
-```bash
-npx skills add EricArcha/human2skill
-```
-
-### Manual install
-
-**Claude Code**
-
-```bash
-git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
-```
-
-**OpenClaw**
-
-```bash
-git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
-```
-
-### Python CLI (optional)
-
-```bash
-pip install git+https://github.com/EricArcha/human2skill.git
-```
-
-Then use any of these triggers:
-
-| Trigger | Effect |
-|---------|--------|
-| `/human2skill Q20` | **Shortcut**: jump straight into 20 Questions |
-| `human2skill` | Standard entry: full Phase 0-5 workflow |
-| `人物蒸馏` | Chinese trigger |
-| `创建人物 Skill` | Chinese trigger |
-| `更新人物视角` | Incremental update for existing Skill |
-
-Requires Python 3.11+. The Agent auto-detects and prompts for installation on first use.
 
 ---
 
