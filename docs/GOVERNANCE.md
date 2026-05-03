@@ -122,6 +122,27 @@ outputs/{slug}/
 
 **为什么**：支撑验证阶段的原文对照（已知测试、一手来源占比计算）。corpus 仅在本地保留，不进入可分发的 Skill。
 
+### 3.4 安装与分发约定
+
+**规则**：meta-skill 采用 repo-as-skill 模式。根目录 `SKILL.md`（从 `human2skill-meta/SKILL.md` 同步）使整个仓库可以直接 clone 为可用的 skill 目录。
+
+```bash
+git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
+```
+
+**为什么**：参照 nuwa-skill 和 colleague-skill 的 AgentSkills 标准——用户不需要理解 Python 打包或 CLI 细节，clone 即用。`human2skill-meta/SKILL.md` 保留为 canonical 编辑入口，根目录 `SKILL.md`、`exports/` 和 `.claude/skills/` 中的副本为同步目标。
+
+**相关文件**：
+- `INSTALL.md`：安装说明，区分终端用户（git clone）和开发者（make install）
+- `Makefile`：开发者便利，`make install` / `make test` / `make clean`
+
+**规则**：生成的 Skill 模板必须在末尾包含溯源签名：
+```
+> 本 Skill 由 [human2skill](https://github.com/EricArcha/human2skill) 生成
+```
+
+**为什么**：每个蒸馏产物都应该能追溯到生成工具和版本。参照 nuwa-skill 的"女娲造人"署名。签名在 `src/human2skill/templates/skill/advisor.md` 和 `first_person.md` 中硬编码。
+
 ---
 
 ## 4. 隐私与伦理
