@@ -19,6 +19,8 @@ Next time you need their judgment, see through their lens.
 
 It's not Li Ming. But it remembers how he thought.
 
+[Get Started](#get-started)&nbsp;&nbsp;·&nbsp;&nbsp;[20 Questions](#the-20-questions-experience)&nbsp;&nbsp;·&nbsp;&nbsp;[Examples](#see-actual-outputs)&nbsp;&nbsp;·&nbsp;&nbsp;[Dev](#for-developers)
+
 </div>
 
 ---
