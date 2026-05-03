@@ -1,103 +1,51 @@
 # human2skill 产品路线图
 
-## 1. 分期原则
+## 分期原则
 
 先建立可闭环的最小系统，再扩展语料、评审和多宿主适配。每一期都必须能独立使用和测试。
 
-## 2. P0：最小闭环
+---
 
-目标：用户可以通过手动语料和自适应访谈生成一个可运行的人物视角 Skill。
+## P0：最小闭环 ✅ 已完成
 
-包含：
+- Profile preset（4 类）+ metadata + evidence pack schema
+- 手动语料导入 + 自适应访谈
+- Skill 生成模板（advisor + first_person）
+- 结构化评审（7 维度评分）
+- 版本快照
 
-- 参考仓库进入 `references/repos/`。
-- 文档和模板目录建立。
-- profile preset：四类基础 profile。
-- metadata schema。
-- evidence pack schema。
-- 手动语料导入。
-- 自适应访谈。
-- Skill 生成模板。
-- 双评审文本流程。
-- 版本目录和更新日志。
+## P1：语料扩展与增量进化 ✅ 已完成
 
-不包含：
+- Markdown/TXT/PDF 批量导入 + `pypdf` 文本提取
+- 增量 evidence 合并 + 冲突检测
+- 版本 diff + 置信度变化报告
+- `corpus/raw/` 原文归档 + PII 扫描
 
-- 自动聊天记录解析。
-- PDF 批量解析。
-- 浏览器自动采集。
-- UI dashboard。
+## P2：多宿主适配与质量增强 ✅ 已完成
 
-验收：
+- Claude Code / OpenClaw / Codex / Hermes 多宿主导出
+- Phase 0-5 工作流 + 3 个强制 Checkpoint
+- 4 层验证漏斗（reviewer → scenario → sub-agent → quality_check.py）
+- `quality_check.py` 7 项自动化品质检查
+- 场景回放测试集（historical/counterfactual/boundary）
+- 导出前隐私检查 + 模板溯源签名
 
-- 至少生成三个样例人物：同事、朋友/亲人、自己。
-- 每个样例都有 `public_skill/SKILL.md` 和 `private_evidence/evidence_pack.json`。
-- public skill 不含敏感原文。
-- 双评审报告可读且能指出低置信度区域。
+---
 
-## 3. P1：语料扩展与增量进化
+## P3：规划中
 
-目标：支持更多真实语料，并支持新材料进入后增量更新。
+| 方向 | 说明 |
+|------|------|
+| 多人物交叉视角 | 同时加载多个人物 Skill 做对比分析 |
+| 公开人物语料库 | 支持网络调研采集公众人物的公开材料 |
+| 长期漂移检测 | 追踪人物视角随时间的演变 |
+| 多观察者证据合并 | 融合多个提供者对同一人物的观察 |
+| 聊天导出格式适配 | 自动解析微信/飞书/钉钉等导出格式 |
+| Web UI | 非 CLI 用户的可视化蒸馏界面 |
+| 本地加密证据区 | 对敏感 evidence 做本地加密存储 |
 
-包含：
+---
 
-- Markdown/TXT 批量导入。
-- PDF 文本提取。
-- 手动聊天记录格式解析。
-- source index 去重。
-- 增量 evidence 合并。
-- 冲突检测和停机提示。
-- 版本 diff 摘要。
-- 置信度变化报告。
+## 当前版本：v2.0.0
 
-验收：
-
-- 新增一批语料后，系统能输出变更建议。
-- 冲突证据不会被自动揉平。
-- 每次合并保存版本。
-- 用户可以回看每个版本变化。
-
-## 4. P2：多宿主适配与质量增强
-
-目标：让生成 Skill 更容易安装到不同 agent 宿主，并提升评审稳定性。
-
-包含：
-
-- Codex adapter。
-- Claude Code adapter。
-- OpenClaw adapter。
-- Hermes 触发说明。
-- 更结构化的评审 JSON。
-- 场景回放测试集。
-- 导出包策略。
-- 分享前检查。
-
-验收：
-
-- 同一人物可以导出不同宿主版本。
-- 每个导出版本都通过隐私检查。
-- 评审报告能稳定识别冒充、证据不足、表达过拟合。
-
-## 5. P3：高级能力
-
-目标：增强自动化和长期使用价值。
-
-可选能力：
-
-- 聊天导出格式适配器。
-- 图片/截图 OCR。
-- 本地加密证据区。
-- 多观察者证据合并。
-- 长期漂移检测。
-- 公开人物 profile。
-- 简单 Web UI 或 TUI。
-
-## 6. 项目里程碑
-
-| 阶段 | 产物 | 预计结果 |
-| --- | --- | --- |
-| M1 | 文档和参考仓库整理 | 实现者能完整理解项目 |
-| M2 | P0 schema 和模板 | 可以手动生成初版 Skill |
-| M3 | P0 CLI 或 skill flow | 可以跑通端到端流程 |
-| M4 | P1 ingest 和 evolution | 可以持续补料进化 |
-| M5 | P2 adapters 和 review | 可以多宿主使用和质量把关 |
+P0-P2 全部完成并合并。132 个 pytest 覆盖核心管线。详见 [CHANGELOG.md](../CHANGELOG.md)。
