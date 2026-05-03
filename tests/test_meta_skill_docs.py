@@ -1,6 +1,6 @@
 from pathlib import Path
 
-SKILL_PATH = Path(__file__).resolve().parent.parent / "human2skill-meta" / "SKILL.md"
+SKILL_PATH = Path(__file__).resolve().parent.parent / "SKILL.md"
 
 
 def test_meta_skill_documents_required_flow():

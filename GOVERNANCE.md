@@ -124,13 +124,13 @@ outputs/{slug}/
 
 ### 3.4 安装与分发约定
 
-**规则**：meta-skill 采用 repo-as-skill 模式。根目录 `SKILL.md`（从 `human2skill-meta/SKILL.md` 同步）使整个仓库可以直接 clone 为可用的 skill 目录。
+**规则**：meta-skill 采用 repo-as-skill 模式。根目录 `SKILL.md` 使整个仓库可以直接 clone 为可用的 skill 目录。
 
 ```bash
 git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
 ```
 
-**为什么**：参照 nuwa-skill 和 colleague-skill 的 AgentSkills 标准——用户不需要理解 Python 打包或 CLI 细节，clone 即用。`human2skill-meta/SKILL.md` 保留为 canonical 编辑入口，根目录 `SKILL.md`、`exports/` 和 `.claude/skills/` 中的副本为同步目标。
+**为什么**：参照 nuwa-skill 和 colleague-skill 的 AgentSkills 标准——用户不需要理解 Python 打包或 CLI 细节，clone 即用。根目录 `SKILL.md` 为 canonical 源，`exports/` 和 `.claude/skills/` 中的副本为同步目标。
 
 **相关文件**：
 - `INSTALL.md`：安装说明，区分终端用户（git clone）和开发者（make install）
@@ -206,14 +206,14 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 |---------|-----------|---------------------|
 | **版本号** | `pyproject.toml` | `src/human2skill/__init__.py`（`__version__`）、`CHANGELOG.md`（新增版本条目）、`tests/test_import.py`（断言值） |
 | **常量/阈值** | `constants.py` | `reviewer.py`（`REVIEW_PASS_THRESHOLDS`）、`quality_check.py`（对应检查项）、`GOVERNANCE.md §2`（阈值描述）、`CLAUDE.md`（如有提及） |
-| **数据模型/路径** | `storage.py` | `flow.py`、`cli.py`、`exporter.py`、`ingest.py`（所有引用 `person_dir` 或 `outputs/` 的文件）；`README.md`、`human2skill-meta/SKILL.md`（目录结构图） |
+| **数据模型/路径** | `storage.py` | `flow.py`、`cli.py`、`exporter.py`、`ingest.py`（所有引用 `person_dir` 或 `outputs/` 的文件）；`README.md`（目录结构图） |
 | **命名规则** | `generator.py`（`{slug}-lens`） | `templates/skill/*.md`（`{skill_name}` 占位符）、`README.md`（示例）、`GOVERNANCE.md §3.1`、所有 `examples/` 中的 SKILL.md |
-| **访谈规则** | `interview.py` | `GOVERNANCE.md §1.5`、`docs/design/adaptive-interview.md`、`docs/README.md`、`human2skill-meta/SKILL.md`（Phase 1 描述） |
-| **验证逻辑** | `reviewer.py` | `flow.py`（`build_from_distillation` 调用）、`quality_check.py`（6 项检查）、`GOVERNANCE.md §2`、`human2skill-meta/SKILL.md`（Phase 4 描述） |
-| **Meta-skill 流程** | `human2skill-meta/SKILL.md` | 根目录 `SKILL.md`、`exports/claude-code/SKILL.md`、`exports/openclaw/SKILL.md`（全部同步副本） |
-| **CLI 参数** | `cli.py` | `INSTALL.md`（示例命令）、`README.md`（快速开始节）、`human2skill-meta/SKILL.md`（Phase 中的命令示例） |
+| **访谈规则** | `interview.py` | `GOVERNANCE.md §1.5`、`docs/design/adaptive-interview.md`、`docs/README.md`、`SKILL.md`（Phase 1 描述） |
+| **验证逻辑** | `reviewer.py` | `flow.py`（`build_from_distillation` 调用）、`quality_check.py`（6 项检查）、`GOVERNANCE.md §2`、`SKILL.md`（Phase 4 描述） |
+| **Meta-skill 流程** | `SKILL.md` | `exports/claude-code/SKILL.md`、`exports/openclaw/SKILL.md`（全部同步副本） |
+| **CLI 参数** | `cli.py` | `INSTALL.md`（示例命令）、`README.md`（快速开始节）、`SKILL.md`（Phase 中的命令示例） |
 | **模板内容** | `templates/skill/*.md` | `generator.py`（`render_skill_variant` 中的格式化字段）、`templates/skill/` 中另一个变体（advisor ↔ first_person 同步）、已生成的示例人物 SKILL.md（`examples/` 和 `outputs/`） |
-| **新增/删除文件** | 文件系统 | `pyproject.toml`（`packages` 配置如需要）、`.gitignore`（防止误提交）、`README.md`（如影响目录结构）、`GOVERNANCE.md §3`（如影响约定）、`human2skill-meta/SKILL.md`（相关文件节） |
+| **新增/删除文件** | 文件系统 | `pyproject.toml`（`packages` 配置如需要）、`.gitignore`（防止误提交）、`README.md`（如影响目录结构）、`GOVERNANCE.md §3`（如影响约定）、`SKILL.md`（相关文件节） |
 | **安装方式** | `INSTALL.md` | `README.md`（快速开始）、`Makefile`（如有命令变更）、任何引用旧安装方式的文档 |
 | **隐私/安全规则** | `constants.py`（`PRIVATE_MARKERS`） | `ingest.py`（`_scan_for_pii`）、`reviewer.py`（`structured_review`）、`exporter.py`（`_privacy_check_passed`）、`GOVERNANCE.md §4` |
 | **Skill 安装目录** | `~/.claude/skills/human2skill/` | `exports/`（分发副本与安装目录内容一致）、`INSTALL.md`（安装命令指向正确源） |
