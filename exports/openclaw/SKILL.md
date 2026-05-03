@@ -365,9 +365,9 @@ human2skill install --export outputs/zhang-san/exports/claude-code --target ~/.c
 - `pyproject.toml` — Python 包配置与 CLI 入口
 - `src/human2skill/` — 核心 Python 模块
 - `scripts/quality_check.py` — 自动化品质检查
-- `schemas/` — 数据 schema（person.meta、evidence_pack、distillation）
-- `templates/profiles/` — 四类 Profile Preset
-- `templates/skill/` — Skill 渲染模板
+- `schemas/` — 数据 schema（person.meta、evidence_pack、distillation），位于 `src/human2skill/schemas/`
+- `templates/profiles/` — 四类 Profile Preset，位于 `src/human2skill/templates/profiles/`
+- `templates/skill/` — Skill 渲染模板，位于 `src/human2skill/templates/skill/`
 
 
 ---

@@ -1,7 +1,6 @@
 # human2skill — 把一个人变成可复用的视角顾问
 
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-132%20passed-brightgreen)](https://github.com/EricArcha/human2skill/actions)
 [![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/EricArcha/human2skill/blob/main/CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![AgentSkills](https://img.shields.io/badge/standard-AgentSkills-orange)](https://agentskills.io)

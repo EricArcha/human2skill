@@ -52,7 +52,7 @@ The system is implemented as a local-first seven-module pipeline. P0-P2 currentl
 - `interview.py` — coverage map and gap-driven Chinese question selection.
 - `distillation.py` — validates distillation JSON against schemas and evidence claim IDs, formats sections, detects overconfident distillation items.
 - `generator.py` — renders advisor and first-person `SKILL.md` variants from bundled templates.
-- `reviewer.py` — structured review with hard failures plus 1-5 score thresholds (evidence consistency ≥4, calibration ≥4, boundaries ≥5, privacy ≥5, expression ≥4, thinking utility ≥4, profile fit ≥4).
+- `reviewer.py` — structured review with hard failures plus 1-5 score thresholds (evidence consistency ≥4, calibration ≥5, boundaries ≥5, privacy ≥5, expression ≥4, thinking utility ≥4, profile fit ≥4).
 - `scenario.py` — scenario replay report across three required types (historical, counterfactual, boundary); passes only when all scenarios pass and all types are present.
 - `schemas.py` — JSON Schema loading and validation via `importlib.resources`, used by reviewer and evidence pack builder to validate outputs.
 - `constants.py` — enumerations for profile types, voice modes, retention policies, hosts, source kinds, claim types, conflict types, and review score keys.

@@ -1,8 +1,10 @@
 from pathlib import Path
 
+SKILL_PATH = Path(__file__).resolve().parent.parent / "human2skill-meta" / "SKILL.md"
+
 
 def test_meta_skill_documents_required_flow():
-    content = Path("human2skill-meta/SKILL.md").read_text(encoding="utf-8")
+    content = SKILL_PATH.read_text(encoding="utf-8")
 
     assert "human2skill create" in content
     assert "human2skill ingest" in content
@@ -15,7 +17,7 @@ def test_meta_skill_documents_required_flow():
 
 
 def test_meta_skill_mentions_checkpoints():
-    content = Path("human2skill-meta/SKILL.md").read_text(encoding="utf-8")
+    content = SKILL_PATH.read_text(encoding="utf-8")
 
     assert "Checkpoint A" in content
     assert "Checkpoint B" in content

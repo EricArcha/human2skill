@@ -39,6 +39,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `review_public_skill()`（被 `structured_review()` 替代）。
 - `README.zh-CN.md`（冗余，`README.md` 已是中文）。
 
+### Fixed
+- Python 包版本号从 `0.1.0` 更新为 `2.0.0`（`pyproject.toml`、`__init__.py`）
+- CLAUDE.md 中 `confidence_calibration` 阈值从 `≥4` 更新为 `≥5`
+- SKILL.md 中 `schemas/`、`templates/` 路径加注完整 `src/human2skill/` 前缀
+- 设计文档中"约 20 轮软限制"措辞更新为"20 轮硬限制"
+- 移除 Actions 徽章（无 CI workflow）
+- 新增 MIT LICENSE
+- 删除 `exports/*/README.md`（统一为 `INSTALL.md`）
+- 删除残留空目录 `people/`
+
 ## [1.0.0] - 2026-04-29
 
 ### Added

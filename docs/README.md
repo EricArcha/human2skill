@@ -35,7 +35,7 @@ Use `human2skill create`, `ingest`, `build`, `review`, `export`, and `install` f
 - 产物是“视角顾问 Skill”，不是冒充本人。
 - 默认采用“可运行 Skill + 本地私有证据包”。
 - 原始私域语料默认不进入可分发 Skill。
-- 访谈是信息缺口驱动，不强制 20 问；约 20 轮仍不足时提示用户后继续。
+- 访谈有 20 轮硬限制，达到上限后必须暂停由用户决定延展或降级。
 - 内置四类 profile：同事/合作者、朋友/亲人、导师/专家、自己。
 - 质量评估采用双评审模式。
 - 参考仓库保存在 `references/repos/`。
