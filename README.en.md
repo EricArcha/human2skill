@@ -13,22 +13,9 @@
 
 **They're leaving. Their way of thinking doesn't have to.**
 
-You know this person — through chat logs, meeting observations, problems solved together. Give what you have to human2skill. It won't impersonate them. It will ask questions you hadn't thought of, then structure everything into an installable "perspective advisor."
-
-Next time you need their judgment, ask it to help you see from a different angle.
-
-> You: Help me review this technical proposal through Li Ming's lens.
->
-> Li Ming Perspective Advisor:
-> He'd likely ask three questions first:
-> 1. Is this solving the actual top pain point?
-> 2. Is there a smaller validation path?
-> 3. Will someone understand why this was designed this way in three months?
->
-> Based on his preferences, he'd suggest cutting two unnecessary abstraction layers
-> and documenting risks in the migration plan.
-> **But I don't have enough evidence to judge how he'd handle compliance trade-offs —
-> you'll need to supplement here.**
+Feed human2skill your chat logs, meeting observations, and memories of someone.
+It won't impersonate them — it distills their perspective into an installable advisor.
+Next time you need their judgment, see through their lens.
 
 It's not Li Ming. But it remembers how he thought.
 
