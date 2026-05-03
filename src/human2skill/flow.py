@@ -100,6 +100,14 @@ def build_from_distillation(
     person_slug = meta["slug"]
     pack = _load_evidence_pack(base)
 
+    # Auto-increment version based on existing snapshots.
+    versions_dir = base / "versions"
+    existing = sorted(v.name for v in versions_dir.iterdir() if v.is_dir() and v.name.startswith("v")) if versions_dir.is_dir() else []
+    next_version = f"v{len(existing) + 1}"
+    meta["lifecycle"]["version"] = next_version
+    meta["lifecycle"]["updated_at"] = generated_at or utc_now_iso()
+    write_json(base / "person.meta.json", meta)
+
     # Collect available claim IDs and detect overconfident claims.
     available_claim_ids = {c["claim_id"] for c in pack.get("claims", [])}
     overconfident = find_overconfident_claims(pack) + find_overconfident_distillation_items(distillation, pack)

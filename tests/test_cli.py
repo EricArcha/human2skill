@@ -20,6 +20,72 @@ def run_cli(*args: str, cwd: Path):
     )
 
 
+def test_cli_create_existing_slug_fails_without_force(tmp_path: Path):
+    # Create once
+    run_cli(
+        "create", "--root", str(tmp_path), "--slug", "test-person",
+        "--name", "Test", "--profile", "colleague",
+        "--relationship", "coworker", "--use-case", "work",
+        cwd=tmp_path,
+    )
+    # Create same slug without --force
+    result = subprocess.run(
+        [sys.executable, "-m", "human2skill.cli", "create",
+         "--root", str(tmp_path), "--slug", "test-person",
+         "--name", "Test", "--profile", "colleague",
+         "--relationship", "coworker", "--use-case", "work"],
+        cwd=tmp_path, text=True, capture_output=True,
+    )
+    assert result.returncode != 0
+    assert "already exists" in result.stderr.lower()
+
+
+def test_cli_create_existing_slug_with_force_overwrites(tmp_path: Path):
+    run_cli(
+        "create", "--root", str(tmp_path), "--slug", "test-person",
+        "--name", "Before", "--profile", "colleague",
+        "--relationship", "coworker", "--use-case", "work",
+        cwd=tmp_path,
+    )
+    result = run_cli(
+        "create", "--root", str(tmp_path), "--slug", "test-person",
+        "--name", "After", "--profile", "colleague",
+        "--relationship", "coworker", "--use-case", "work",
+        "--force",
+        cwd=tmp_path,
+    )
+    assert "created" in result.stdout.lower()
+    meta = json.loads(
+        (tmp_path / "outputs/test-person/person.meta.json").read_text(encoding="utf-8")
+    )
+    assert meta["display_name"] == "After"
+
+
+def test_cli_status_shows_project_info(tmp_path: Path):
+    run_cli(
+        "create", "--root", str(tmp_path), "--slug", "test-person",
+        "--name", "Test", "--profile", "colleague",
+        "--relationship", "coworker", "--use-case", "work",
+        cwd=tmp_path,
+    )
+    result = run_cli(
+        "status", "--root", str(tmp_path), "--slug", "test-person",
+        cwd=tmp_path,
+    )
+    assert "version:" in result.stdout.lower()
+    assert "v1" in result.stdout
+
+
+def test_cli_status_nonexistent(tmp_path: Path):
+    result = subprocess.run(
+        [sys.executable, "-m", "human2skill.cli", "status",
+         "--root", str(tmp_path), "--slug", "nobody"],
+        cwd=tmp_path, text=True, capture_output=True,
+    )
+    assert result.returncode == 0
+    assert "does not exist" in result.stdout
+
+
 def test_cli_create_and_ingest(tmp_path: Path):
     result = run_cli(
         "create",

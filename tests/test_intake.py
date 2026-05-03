@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from human2skill.intake import create_person, normalize_profile, normalize_voice_mode
+from human2skill.intake import create_person, normalize_profile, normalize_voice_mode, project_exists, project_status
 
 
 def test_create_person_writes_meta_with_defaults(tmp_path: Path):
@@ -69,6 +69,46 @@ def test_normalize_voice_mode_passes_valid_modes():
     assert normalize_voice_mode("advisor") == "advisor"
     assert normalize_voice_mode("first_person") == "first_person"
     assert normalize_voice_mode("both") == "both"
+
+
+def test_project_exists_false_for_nonexistent(tmp_path: Path):
+    assert project_exists(tmp_path, "nobody") is False
+
+
+def test_project_exists_true_for_created(tmp_path: Path):
+    create_person(
+        root=tmp_path,
+        slug="li-ming",
+        display_name="李明",
+        profile_type="colleague",
+        relationship_to_user="coworker",
+        use_case="work review",
+    )
+    assert project_exists(tmp_path, "li-ming") is True
+
+
+def test_project_status_returns_not_found(tmp_path: Path):
+    status = project_status(tmp_path / "outputs" / "nobody")
+    assert status["exists"] is False
+
+
+def test_project_status_returns_summary(tmp_path: Path):
+    base = create_person(
+        root=tmp_path,
+        slug="li-ming",
+        display_name="李明",
+        profile_type="colleague",
+        relationship_to_user="coworker",
+        use_case="work review",
+        now="2026-05-01T00:00:00+00:00",
+    )
+    status = project_status(base)
+    assert status["exists"] is True
+    assert status["version"] == "v1"
+    assert status["created_at"] == "2026-05-01T00:00:00+00:00"
+    assert status["mental_model_count"] == 0
+    assert status["source_count"] == 0
+    assert status["version_count"] == 0
 
 
 def test_create_person_with_minimal_args_defaults_voice_and_populates_timestamps(tmp_path: Path):

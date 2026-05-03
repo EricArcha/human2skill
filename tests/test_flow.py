@@ -3,6 +3,7 @@ from pathlib import Path
 
 from human2skill.evidence_builder import add_claim, add_conflict, add_evidence, empty_evidence_pack
 from human2skill.flow import build_from_distillation, create_project_person
+from human2skill.storage import write_json
 
 
 def test_create_project_person_initializes_person(tmp_path: Path):
@@ -104,6 +105,58 @@ def test_build_from_distillation_renders_and_reviews(tmp_path: Path):
 
     assert result["review"]["passed"] is True
     assert (base / "public_skill/SKILL.md").exists()
+
+
+def test_build_increments_version_in_meta(tmp_path: Path):
+    """Each build call updates the version in person.meta.json even if review fails."""
+    from human2skill.evidence_builder import add_claim, add_evidence
+
+    base = create_project_person(
+        root=tmp_path,
+        slug="li-ming",
+        display_name="李明",
+        profile_type="colleague",
+        relationship_to_user="coworker",
+        use_case="work review",
+        voice_mode="advisor",
+        now="2026-04-29T00:00:00+00:00",
+    )
+
+    pack = empty_evidence_pack("li-ming")
+    ev = add_evidence(pack, source_type="direct_quote_or_behavior",
+                      source_summary="先问 impact。", retention="summary_only",
+                      confidence="medium", supports=[])
+    add_claim(pack, claim="先问 impact。", claim_type="decision_heuristic",
+              confidence="medium", evidence_ids=[ev["evidence_id"]])
+    write_json(base / "private_evidence/evidence_pack.json", pack)
+    claim_id = pack["claims"][0]["claim_id"]
+
+    def load_version() -> str:
+        meta = json.loads((base / "person.meta.json").read_text(encoding="utf-8"))
+        return meta["lifecycle"]["version"]
+
+    dist = {
+        "schema_version": "1", "person_slug": "li-ming",
+        "generated_at": "2026-04-29T00:00:00+00:00",
+        "source_evidence_pack_version": "v1",
+        "mental_models": [], "decision_heuristics": [], "expression_dna": [],
+        "profile_specific": [], "pressure_response": [], "value_order": [],
+        "anti_patterns": [],
+        "honest_boundaries": [
+            {"title": "A", "content": "X", "claim_ids": [], "confidence": "low",
+             "evidence_summary": "无", "limits": ["不推断。"]},
+        ],
+        "scenario_tests": [],
+    }
+
+    assert load_version() == "v1"  # initial version from create
+
+    # Simulate one prior successful build by creating a version dir.
+    (base / "versions" / "v1").mkdir(parents=True, exist_ok=True)
+
+    # Build → should now compute v2 (1 existing dir → v2)
+    build_from_distillation(base, dist, generated_at="2026-05-01T00:00:00+00:00")
+    assert load_version() == "v2"
 
 
 # ---------------------------------------------------------------------------

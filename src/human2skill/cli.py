@@ -15,6 +15,7 @@ from human2skill.exporter import export_skill, load_review_for_variant
 from human2skill.flow import build_from_distillation, create_project_person
 from human2skill.ingest import ingest_file
 from human2skill.installer import install_export
+from human2skill.intake import project_exists, project_status
 from human2skill.interview import (
     assess_coverage,
     initial_coverage,
@@ -30,6 +31,14 @@ def _handle_error(msg: str) -> None:
 
 
 def _cmd_create(args: argparse.Namespace) -> None:
+    base_dir = Path(args.root) / "outputs" / args.slug
+    if base_dir.exists() and not args.force:
+        print(
+            f"error: project '{args.slug}' already exists at {base_dir}\n"
+            f"  Use --force to overwrite (not recommended), or run an incremental update instead.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     base = create_project_person(
         root=Path(args.root),
         slug=args.slug,
@@ -173,6 +182,22 @@ def _cmd_install(args: argparse.Namespace) -> None:
     print(f"installed: {target}")
 
 
+def _cmd_status(args: argparse.Namespace) -> None:
+    base = person_dir(Path(args.root), args.slug)
+    status = project_status(base)
+    if not status["exists"]:
+        print(f"project '{args.slug}' does not exist")
+        return
+
+    print(f"slug:          {args.slug}")
+    print(f"version:       {status['version']}")
+    print(f"created:       {status['created_at']}")
+    print(f"updated:       {status['updated_at']}")
+    print(f"mental models: {status['mental_model_count']}")
+    print(f"sources:       {status['source_count']}")
+    print(f"snapshots:     {status['version_count']}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="human2skill")
     sub = parser.add_subparsers(dest="command")
@@ -186,6 +211,7 @@ def main() -> None:
     p_create.add_argument("--relationship", required=True, help="Relationship to user")
     p_create.add_argument("--use-case", required=True, help="Primary use case")
     p_create.add_argument("--voice-mode", default="advisor", choices=VOICE_MODES, help="Voice mode")
+    p_create.add_argument("--force", action="store_true", help="Overwrite existing project")
 
     # ---- ingest ----
     p_ingest = sub.add_parser("ingest", help="Ingest a source file into a person project")
@@ -239,6 +265,11 @@ def main() -> None:
     p_install.add_argument("--name", required=True, help="Package name for the installed skill")
     p_install.add_argument("--no-force", action="store_true", help="Fail if target already exists")
 
+    # ---- status ----
+    p_status = sub.add_parser("status", help="Show project status summary")
+    p_status.add_argument("--root", required=True)
+    p_status.add_argument("--slug", required=True)
+
     args = parser.parse_args()
 
     if args.command is None:
@@ -255,6 +286,7 @@ def main() -> None:
         "review": _cmd_review,
         "export": _cmd_export,
         "install": _cmd_install,
+        "status": _cmd_status,
     }
 
     dispatch[args.command](args)

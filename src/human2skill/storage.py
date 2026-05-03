@@ -31,6 +31,31 @@ def write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def backup_before_update(base: Path, current_version: str) -> Path | None:
+    """Archive current key artifacts before an incremental update.
+
+    Copies ``person.meta.json``, ``distillation.json``, and
+    ``evidence_pack.json`` into ``versions/{version}_before_update/``.
+    Returns the backup directory path, or ``None`` if none of the source
+    files exist.
+    """
+    target = base / "versions" / f"{current_version}_before_update"
+    sources = (
+        "person.meta.json",
+        "private_evidence/distillation.json",
+        "private_evidence/evidence_pack.json",
+    )
+    wrote = False
+    for relative in sources:
+        src = base / relative
+        if src.exists():
+            dest = target / relative
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dest)
+            wrote = True
+    return target if wrote else None
+
+
 def snapshot_version(base: Path, version: str) -> Path:
     target = base / "versions" / version
     target.mkdir(parents=True, exist_ok=True)
