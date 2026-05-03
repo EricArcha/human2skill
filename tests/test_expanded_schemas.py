@@ -33,30 +33,36 @@ def test_person_meta_accepts_voice_and_export_policy():
     })
 
 
-def test_person_meta_rejects_public_private_quotes():
-    document = {
-        "schema_version": "1",
-        "slug": "li-ming",
-        "display_name": "李明",
-        "profile_type": "colleague",
-        "voice_mode": "advisor",
-        "privacy_policy": {
-            "raw_retention": "summary_only",
-            "public_skill_allows_private_quotes": True
-        },
-        "export_policy": {
-            "default_visibility": "private",
-            "shareable_variants": ["advisor"],
-            "requires_privacy_review": True
-        },
-        "lifecycle": {
-            "version": "v1",
-            "created_at": "2026-04-29T00:00:00+00:00",
-            "updated_at": "2026-04-29T00:00:00+00:00"
-        }
-    }
-    with pytest.raises(Exception):
-        validate_document("person.meta.schema.json", document)
+def test_person_meta_accepts_quotes_for_any_voice_mode():
+    # Both advisor and first_person can allow private quotes
+    for voice_mode in ("advisor", "first_person", "both"):
+        validate_document("person.meta.schema.json", {
+            "schema_version": "1",
+            "slug": "li-ming",
+            "display_name": "李明",
+            "profile_type": "colleague",
+            "relationship_to_user": "coworker",
+            "use_case": "work review",
+            "voice_mode": voice_mode,
+            "consent_status": {
+                "person_consented": False,
+                "distribution_allowed": False,
+            },
+            "privacy_policy": {
+                "raw_retention": "summary_only",
+                "public_skill_allows_private_quotes": True
+            },
+            "export_policy": {
+                "default_visibility": "private",
+                "shareable_variants": ["advisor"],
+                "requires_privacy_review": True
+            },
+            "lifecycle": {
+                "version": "v1",
+                "created_at": "2026-04-29T00:00:00+00:00",
+                "updated_at": "2026-04-29T00:00:00+00:00"
+            }
+        })
 
 
 def test_source_index_accepts_summary_only_source():

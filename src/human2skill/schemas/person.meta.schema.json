@@ -53,17 +53,5 @@
       "additionalProperties": false
     }
   },
-  "additionalProperties": false,
-  "if": {
-    "properties": {"voice_mode": {"const": "advisor"}}
-  },
-  "then": {
-    "properties": {
-      "privacy_policy": {
-        "properties": {
-          "public_skill_allows_private_quotes": {"const": false}
-        }
-      }
-    }
-  }
+  "additionalProperties": false
 }
