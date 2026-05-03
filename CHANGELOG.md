@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 删除残留空目录 `people/`、`.claude/skills/human2skill/`、`.claude/skills/brittany/`
 - GOVERNANCE.md §5 新增变更影响矩阵（13 种变更类型 × 下游文件）
 - GOVERNANCE.md 从 `docs/` 移至根目录，与 README/CHANGELOG/CLAUDE/LICENSE 同级
-- docs/ 目录重组：`superpowers/plans/` → `archive/plans/` 归档备查，`specs/` 与 `design/` 平级
+- docs/ 目录重组：`superpowers/` 彻底拆分 → `archive/`（历史计划）+ `specs/`（产品规格），与 `design/` 平级
 
 ## [1.0.0] - 2026-04-29
 
