@@ -23,6 +23,10 @@
 
 </div>
 
+![human2skill demo](demo/demo-animation.gif)
+
+[下载 60fps MP4](demo/demo-animation-60fps.mp4) · [落地页](demo/index.html)
+
 ---
 
 ## 开始使用
