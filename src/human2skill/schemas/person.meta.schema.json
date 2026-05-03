@@ -25,7 +25,7 @@
       "required": ["raw_retention", "public_skill_allows_private_quotes"],
       "properties": {
         "raw_retention": {"enum": ["no_raw_retention", "summary_only", "local_private_raw"]},
-        "public_skill_allows_private_quotes": {"const": false}
+        "public_skill_allows_private_quotes": {"type": "boolean"}
       },
       "additionalProperties": false
     },
@@ -53,5 +53,17 @@
       "additionalProperties": false
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "if": {
+    "properties": {"voice_mode": {"const": "advisor"}}
+  },
+  "then": {
+    "properties": {
+      "privacy_policy": {
+        "properties": {
+          "public_skill_allows_private_quotes": {"const": false}
+        }
+      }
+    }
+  }
 }

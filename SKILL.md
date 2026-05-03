@@ -58,6 +58,21 @@ outputs/{slug}/
 流程采用 Phase 化设计，3 个强制检查点需要用户确认才能推进。
 **绝对不可跳过任何 Phase 或 Checkpoint。迭代上限 2 轮。**
 
+### ⛔ 防跳过规则（优先级高于所有 Phase 指令）
+
+**歧义处理**：用户输入 `进入蒸馏`、`继续`、`ok`、`下一步`、`直接构建`、`直接导出` 等短语时，Agent **不得**将其解释为 Checkpoint 确认。必须追问：「你是确认通过 [Checkpoint X] 吗？请回复「确认A/确认B/确认C」之一，或告诉我你想做什么。」
+
+**唯一确认令牌**：每个 Checkpoint 只接受一个特定确认词：
+| Checkpoint | 确认词 | 其他回应 |
+|-----------|--------|---------|
+| A 覆盖率 | `确认A` | 补充信息、降级确认 |
+| B 蒸馏 | `确认B` | 修改条目、回 Phase 1 |
+| C 验证 | `确认C` | 回 Phase 2、降级交付 |
+
+用户说 `y`、`是的`、`好`、`ok` 仅当紧接着 Agent 刚展示的 Checkpoint 摘要才算有效，否则视为歧义需追问。
+
+**Agent 发现用户输入可能意味着跳过 Checkpoint 时，必须先暂停澄清，再继续。**
+
 ---
 
 ### Phase 0: 入口分流
@@ -201,7 +216,7 @@ Agent 将访谈记录写入 `private_evidence/interviews/interview-YYYYMMDD-HHMM
 
 **Agent 必须在此暂停，展示覆盖率摘要，等待用户确认后才能继续。**
 
-> 用户可以输入：y（继续）/ 补充信息 / 降级确认
+> 请输入「确认A」继续，或告诉我你想补充/修改什么（也可输入「降级确认」跳过标准）
 
 也可通过 CLI 查看：
 ```bash
@@ -266,7 +281,7 @@ Agent 编写 `private_evidence/distillation.json`，包含 9 个章节：mental_
 
 **Agent 必须在此暂停，展示蒸馏摘要，等待用户确认后才能继续。**
 
-> 用户可以输入：y（继续）/ 修改具体条目 / 回到 Phase 1 补充信息
+> 请输入「确认B」继续，或告诉我你想修改哪些条目/回到 Phase 1 补充信息
 
 展示格式：
 
@@ -285,6 +300,11 @@ Agent 编写 `private_evidence/distillation.json`，包含 9 个章节：mental_
 ---
 
 ### Phase 3: 构建 Skill
+
+**Agent 在调 build 之前必须自检：**
+- [ ] Checkpoint A 已通过？（用户确认了「确认A」）
+- [ ] Checkpoint B 已通过？（用户确认了「确认B」）
+- 任一未通过 → 回到对应 Checkpoint，不可跳过
 
 Agent 调用 `human2skill build` 从蒸馏声明生成 Skill：
 
@@ -339,7 +359,7 @@ Skill 命名格式：`{slug}-lens`
 
 **Agent 展示验证结果表格，等待用户确认后才算完成。**
 
-> 用户可以输入：y（完成）/ 回到 Phase 2 调整（最多 2 轮迭代）/ 降级交付当前版本
+> 请输入「确认C」完成，或告诉我你想回到 Phase 2 调整（最多 2 轮迭代）/ 降级交付当前版本
 
 展示格式：
 
@@ -362,6 +382,12 @@ Skill 命名格式：`{slug}-lens`
 ---
 
 ### Phase 5: 导出 + 交付
+
+**Agent 在导出之前必须自检：**
+- [ ] Checkpoint A 已通过？
+- [ ] Checkpoint B 已通过？
+- [ ] Checkpoint C 已通过？
+- 任一未通过 → 回到对应 Checkpoint，不可跳过
 
 导出可分发 Skill：
 

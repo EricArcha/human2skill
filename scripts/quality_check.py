@@ -41,8 +41,23 @@ def _section_items(content: str, section_name: str) -> list[str]:
     return items
 
 
+def _model_items(content: str, section_name: str) -> list[str]:
+    """Extract only the top-level model names (bolded lines) from a markdown section."""
+    pattern = rf'##\s+{section_name}\s*\n(.*?)(?=\n##\s|\Z)'
+    match = re.search(pattern, content, re.DOTALL)
+    if not match:
+        return []
+    items = []
+    for line in match.group(1).split('\n'):
+        # Only count lines that start with "- **" (model titles with bold)
+        # not sub-items like "- 证据:" or "- 限制:"
+        if line.startswith('- **') and '**' in line[4:]:
+            items.append(line[2:].strip())
+    return items
+
+
 def check_mental_models(content: str) -> tuple[bool, str]:
-    count = len(_section_items(content, '核心思维模型'))
+    count = len(_model_items(content, '核心思维模型'))
     if count == 0:
         return False, "未检测到心智模型条目"
     passed = 3 <= count <= 7
@@ -56,13 +71,19 @@ def check_limitations(content: str) -> tuple[bool, str]:
         return False, "未找到核心思维模型section"
 
     section = match.group(1)
-    top_items = re.findall(r'^- (.+?)(?=^- |\Z)', section, re.DOTALL | re.MULTILINE)
+    # Only count lines beginning with "- **" (model name entries)
+    top_items = [line for line in section.split('\n') if line.startswith('- **') and '**' in line[4:]]
     if not top_items:
         return False, "无心智模型条目"
 
-    with_limits = sum(1 for item in top_items if '限制:' in item)
-    passed = with_limits == len(top_items)
-    return passed, f"{with_limits}/{len(top_items)}个模型有限制声明 {'✅' if passed else '❌'}"
+    # Check if each model's entry (until next model or end) contains "限制:"
+    entries = re.split(r'\n- \*\*', section)
+    model_entries = [e for e in entries if e.strip()]
+    # Skip the first split (text before first model)
+    with_limits = sum(1 for e in model_entries if '限制:' in e)
+    total = len(top_items)
+    passed = with_limits == total
+    return passed, f"{with_limits}/{total}个模型有限制声明 {'✅' if passed else '❌'}"
 
 
 def check_expression_dna(content: str) -> tuple[bool, str]:
@@ -99,12 +120,16 @@ def check_primary_sources(content: str, corpus_index: dict | None = None) -> tup
         if not sources:
             return False, "corpus/index.json 存在但无来源记录"
 
+        # Corpus stores file-type (txt, markdown, pdf_text), not evidence-type.
+        # If types are file extensions, consider all as primary and fall back to
+        # content-based keyword matching for the ratio.
+        first_type = sources[0].get("type", "") if sources else ""
+        if first_type in ("txt", "markdown", "pdf_text", None, ""):
+            # Corpus types are file formats — fall back to content keyword matching
+            return _check_primary_sources_keyword(content)
+
         primary_types = {"direct_quote_or_behavior", "observer_report"}
         primary = sum(1 for s in sources if s.get("type") in primary_types)
-        secondary = sum(1 for s in sources
-                        if s.get("type") == "model_inference" or s.get("type", "") not in primary_types)
-        # Consider any source that isn't model_inference as primary
-        primary = len(sources) - secondary
         total = len(sources)
         ratio = primary / total if total > 0 else 0
         passed = ratio > 0.5
@@ -113,7 +138,11 @@ def check_primary_sources(content: str, corpus_index: dict | None = None) -> tup
             f"{'✅' if passed else '❌ (应>50%)'}"
         )
 
-    # Fallback: keyword matching in SKILL.md content
+    return _check_primary_sources_keyword(content)
+
+
+def _check_primary_sources_keyword(content: str) -> tuple[bool, str]:
+    """Fallback: keyword matching in SKILL.md content."""
     primary = len(re.findall(r'一手|primary|本人|原话|direct_quote', content, re.IGNORECASE))
     secondary = len(re.findall(r'二手|secondary|转述|observer_report|推断|inference',
                                 content, re.IGNORECASE))
