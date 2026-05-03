@@ -1,9 +1,11 @@
+<div align="center">
+
 # human2skill
 
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://www.python.org/)
 [![Version](https://img.shields.io/badge/version-2.3.0-blue)](https://github.com/EricArcha/human2skill/blob/main/CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![skills.sh](https://skills.sh/b/EricArcha/human2skill)](https://skills.sh/EricArcha/human2skill)
+[![skills.sh](https://img.shields.io/badge/skills.sh-ready-brightgreen)](https://skills.sh)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-orange)](https://claude.ai/code)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-compatible-orange)](https://openclaw.ai)
 
@@ -27,6 +29,8 @@
 > **但我没有足够证据判断他在安全合规问题上的取舍——这里需要你补充材料。**
 
 它不是李明。但它记得李明怎么想。
+
+</div>
 
 ---
 
