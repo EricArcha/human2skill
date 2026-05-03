@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>human2skill — 演示</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; overflow: hidden; }
+@font-face {
+  font-family: 'CurrencyMono';
+  src: local('ui-monospace'), local('SF Mono'), local('Menlo');
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Animations engine (inlined from animations.jsx)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(function() {
+  const { createContext, useContext, useState, useEffect, useRef, useCallback } = React;
+  const TimeContext = createContext({ time: 0, duration: 10, playing: false });
+  const SpriteContext = createContext(null);
+
+  const Easing = {
+    linear: t => t,
+    easeIn: t => t * t,
+    easeOut: t => 1 - (1 - t) * (1 - t),
+    easeInOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    expoOut: t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+    overshoot: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+    spring: t => { const c = (2 * Math.PI) / 3; return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c) + 1; },
+  };
+
+  function interpolate(t, input, output, easing) {
+    const [inStart, inEnd] = input;
+    const [outStart, outEnd] = output;
+    if (t <= inStart) return outStart;
+    if (t >= inEnd) return outEnd;
+    let progress = (t - inStart) / (inEnd - inStart);
+    if (easing) progress = easing(progress);
+    return outStart + (outEnd - outStart) * progress;
+  }
+
+  function useTime() { return useContext(TimeContext).time; }
+  function useSprite() {
+    const sprite = useContext(SpriteContext);
+    return sprite || { t: 0, elapsed: 0, duration: 0 };
+  }
+
+  function Stage({ duration = 10, width = 1920, height = 1080, loop = true, children, bgColor = '#fff' }) {
+    const [time, setTime] = useState(0);
+    const [playing, setPlaying] = useState(true);
+    const [scale, setScale] = useState(1);
+    const rafRef = useRef(null);
+    const effectiveLoop = (typeof window !== 'undefined' && window.__recording) ? false : loop;
+    useEffect(() => {
+      function updateScale() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const s = Math.min(vw / width, vh / height);
+        setScale(s);
+      }
+      updateScale();
+      window.addEventListener('resize', updateScale);
+      return () => window.removeEventListener('resize', updateScale);
+    }, [width, height]);
+    useEffect(() => {
+      if (!playing) return;
+      let cancelled = false;
+      let last = null;
+      function tick(now) {
+        if (cancelled) return;
+        if (last === null) { last = now; if (typeof window !== 'undefined') window.__ready = true; }
+        const delta = (now - last) / 1000;
+        last = now;
+        setTime(prev => {
+          const next = prev + delta;
+          if (next >= duration) return effectiveLoop ? 0 : duration - 0.001;
+          return next;
+        });
+        rafRef.current = requestAnimationFrame(tick);
+      }
+      const startAfterFonts = () => { if (!cancelled) rafRef.current = requestAnimationFrame(tick); };
+      if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(startAfterFonts);
+      } else {
+        startAfterFonts();
+      }
+      return () => { cancelled = true; cancelAnimationFrame(rafRef.current); };
+    }, [playing, duration, effectiveLoop]);
+    const ctx = { time, duration, playing, setPlaying, setTime };
+    return (
+      <TimeContext.Provider value={ctx}>
+        <div style={{
+          position: 'fixed', inset: 0, background: '#000',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+        }}>
+          <div style={{
+            width, height, background: bgColor, overflow: 'hidden',
+            transform: `scale(${scale})`, transformOrigin: 'center center',
+            position: 'relative',
+          }}>
+            {children}
+          </div>
+        </div>
+      </TimeContext.Provider>
+    );
+  }
+
+  function Sprite({ start = 0, end, children, style }) {
+    const { time } = useContext(TimeContext);
+    const actualEnd = end == null ? Infinity : end;
+    if (time < start || time >= actualEnd) return null;
+    const duration = actualEnd - start;
+    const elapsed = time - start;
+    const t = duration === 0 ? 1 : Math.max(0, Math.min(1, elapsed / duration));
+    const spriteValue = { t, elapsed, duration, start, end: actualEnd };
+    return (
+      <SpriteContext.Provider value={spriteValue}>
+        <div style={{ position: 'absolute', inset: 0, ...style }}>{children}</div>
+      </SpriteContext.Provider>
+    );
+  }
+
+  if (typeof window !== 'undefined') {
+    window.Animations = { Stage, Sprite, useTime, useSprite, Easing, interpolate };
+  }
+})();
+
+const { Stage, Sprite, useTime, useSprite, Easing, interpolate } = window.Animations;
+const { useState } = React;
+const { useRef, useEffect } = React;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Color palette
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const C = {
+  bg: '#0A0A0A',
+  text: '#F0EDE8',
+  textMuted: 'rgba(240,237,232,0.45)',
+  accent: '#C97B5A',
+  accentGlow: 'rgba(201,123,90,0.25)',
+  accentDim: 'rgba(201,123,90,0.12)',
+  teal: '#5A9A8C',
+  divider: 'rgba(240,237,232,0.08)',
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Scene 1: "那个人要走了。" — a person leaves
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function Scene1() {
+  const { t, elapsed } = useSprite();
+
+  const textOpacity = interpolate(elapsed, [0, 0, 0.8, 2.5], [0, 1, 1, 1], Easing.easeOut);
+  const textY = interpolate(elapsed, [0, 0.8], [40, 0], Easing.expoOut);
+  const subtitleOpacity = interpolate(elapsed, [1.5, 2.2], [0, 1], Easing.easeOut);
+  const avatarScale = interpolate(elapsed, [0, 1], [0.85, 1], Easing.overshoot);
+  const avatarGlow = interpolate(elapsed, [2.5, 3.8], [1, 0], Easing.easeIn);
+  const avatarFade = interpolate(elapsed, [2.8, 3.8], [1, 0], Easing.easeOut);
+
+  // Particles that emerge as the person fades
+  const particleOpacity = interpolate(elapsed, [2.5, 3.5], [0, 1], Easing.easeOut);
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Abstract "person" — a circle + subtle shoulder arc */}
+      <div style={{
+        width: 80, height: 80, borderRadius: '50%',
+        background: `radial-gradient(circle at 40% 35%, ${C.accent}, ${C.accent}88)`,
+        boxShadow: `0 0 ${60 * avatarGlow}px ${20 * avatarGlow}px ${C.accentGlow}`,
+        opacity: avatarFade,
+        transform: `scale(${avatarScale})`,
+        marginBottom: 40,
+        transition: 'none',
+      }} />
+      {/* Shoulder line */}
+      <div style={{
+        width: 120, height: 2, borderRadius: 1,
+        background: C.divider,
+        opacity: avatarFade * 0.6,
+        marginTop: -20,
+        transform: `scaleX(${avatarScale})`,
+      }} />
+
+      {/* Main text */}
+      <div style={{
+        fontFamily: "'Noto Serif SC', 'Songti SC', serif",
+        fontSize: 84,
+        fontWeight: 700,
+        color: C.text,
+        opacity: textOpacity,
+        transform: `translateY(${textY}px)`,
+        letterSpacing: '0.08em',
+        marginBottom: 16,
+      }}>
+        那个人要走了。
+      </div>
+
+      {/* Subtitle */}
+      <div style={{
+        fontFamily: "'Inter', -apple-system, sans-serif",
+        fontSize: 18,
+        fontWeight: 300,
+        color: C.textMuted,
+        opacity: subtitleOpacity * textOpacity,
+        letterSpacing: '0.12em',
+      }}>
+        你的同事 · 导师 · 朋友
+      </div>
+
+      {/* Particles emerging */}
+      <Particles opacity={particleOpacity} />
+    </div>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Floating particles (simple dots)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function Particles({ opacity }) {
+  const dots = [
+    { x: 670, y: 420, size: 4, delay: 0 },
+    { x: 1250, y: 420, size: 3, delay: 0.15 },
+    { x: 780, y: 680, size: 5, delay: 0.3 },
+    { x: 1140, y: 680, size: 3, delay: 0.1 },
+    { x: 600, y: 550, size: 2, delay: 0.4 },
+    { x: 1320, y: 550, size: 4, delay: 0.2 },
+    { x: 960, y: 400, size: 3, delay: 0.35 },
+    { x: 960, y: 700, size: 4, delay: 0.05 },
+  ];
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity }}>
+      {dots.map((d, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          left: d.x, top: d.y,
+          width: d.size, height: d.size,
+          borderRadius: '50%',
+          background: C.accent,
+          opacity: 0.7,
+          transform: `translate(${Math.sin(d.delay * 5) * 30}px, ${Math.cos(d.delay * 4) * 20}px)`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Scene 2: Thinking dimensions emerge
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const DIMS = [
+  { label: '思维模型', desc: '如何拆解问题', en: 'mental models' },
+  { label: '决策启发式', desc: '如何做取舍', en: 'decision heuristics' },
+  { label: '表达 DNA', desc: '如何表达与反馈', en: 'expression DNA' },
+  { label: '反模式', desc: '警惕什么', en: 'anti-patterns' },
+  { label: '诚实边界', desc: '不假装知道', en: 'honest boundaries' },
+];
+
+function ThinkingDims() {
+  const { elapsed } = useSprite();
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+      <div style={{
+        fontFamily: "'Noto Serif SC', 'Songti SC', serif",
+        fontSize: 36,
+        fontWeight: 700,
+        color: C.text,
+        opacity: interpolate(elapsed, [0, 0.6], [0, 1], Easing.easeOut),
+        transform: `translateY(${interpolate(elapsed, [0, 0.6], [20, 0], Easing.easeOut)}px)`,
+        letterSpacing: '0.06em',
+        marginBottom: 12,
+      }}>
+        但他的思考方式
+      </div>
+
+      {DIMS.map((dim, i) => {
+        const appearTime = 0.8 + i * 0.35;
+        const itemOpacity = interpolate(elapsed, [appearTime, appearTime + 0.4], [0, 1], Easing.easeOut);
+        const itemX = interpolate(elapsed, [appearTime, appearTime + 0.4], [60, 0], Easing.expoOut);
+        const itemScale = interpolate(elapsed, [appearTime, appearTime + 0.4], [0.92, 1], Easing.overshoot);
+
+        return (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', gap: 20,
+            opacity: itemOpacity,
+            transform: `translateX(${itemX}px) scale(${itemScale})`,
+          }}>
+            <div style={{
+              width: 10, height: 10, borderRadius: '50%',
+              background: i % 2 === 0 ? C.accent : C.teal,
+              flexShrink: 0,
+            }} />
+            <div style={{
+              fontFamily: "'Noto Serif SC', 'Songti SC', serif",
+              fontSize: 26,
+              fontWeight: 600,
+              color: C.text,
+              letterSpacing: '0.04em',
+              minWidth: 160,
+            }}>
+              {dim.label}
+            </div>
+            <div style={{
+              fontFamily: "'Inter', -apple-system, sans-serif",
+              fontSize: 13,
+              fontWeight: 300,
+              color: C.textMuted,
+              letterSpacing: '0.02em',
+            }}>
+              {dim.desc}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Connecting line */}
+      <div style={{
+        position: 'absolute', top: '42%', left: '50%',
+        width: 1, height: '38%',
+        background: `linear-gradient(to bottom, ${C.accent}44, ${C.teal}44)`,
+        opacity: interpolate(elapsed, [1.5, 2.5], [0, 1], Easing.easeOut),
+        transform: 'translateX(-50%)',
+        pointerEvents: 'none',
+      }} />
+    </div>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Scene 3: Distillation — "留下来"
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function Scene3() {
+  const { elapsed } = useSprite();
+
+  // Lens focus animation
+  const lensScale = interpolate(elapsed, [0, 0.8], [0.6, 1], Easing.overshoot);
+  const lensOpacity = interpolate(elapsed, [0, 0.6], [0, 1], Easing.easeOut);
+  const ringRotate = interpolate(elapsed, [0, 3], [0, 360], Easing.linear);
+
+  // Text animations
+  const mainOpacity = interpolate(elapsed, [0.8, 1.6], [0, 1], Easing.easeOut);
+  const mainY = interpolate(elapsed, [0.8, 1.6], [30, 0], Easing.expoOut);
+  const subOpacity = interpolate(elapsed, [2, 2.8], [0, 1], Easing.easeOut);
+
+  // Bottom tagline
+  const taglineOpacity = interpolate(elapsed, [2.5, 3.2], [0, 1], Easing.easeOut);
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Lens icon — two overlapping rings */}
+      <div style={{
+        width: 120, height: 120, position: 'relative',
+        opacity: lensOpacity,
+        transform: `scale(${lensScale})`,
+        marginBottom: 48,
+      }}>
+        {/* Outer ring */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          borderRadius: '50%',
+          border: `2.5px solid ${C.accent}`,
+          transform: `rotate(${ringRotate * 0.3}deg)`,
+        }} />
+        {/* Inner ring — rotated for lens effect */}
+        <div style={{
+          position: 'absolute', inset: 12,
+          borderRadius: '50%',
+          border: `2px solid ${C.teal}`,
+          transform: `rotate(${-ringRotate * 0.2}deg)`,
+        }} />
+        {/* Center dot */}
+        <div style={{
+          position: 'absolute',
+          top: '50%', left: '50%',
+          width: 8, height: 8,
+          borderRadius: '50%',
+          background: C.accent,
+          transform: 'translate(-50%, -50%)',
+          boxShadow: `0 0 20px ${C.accentGlow}`,
+        }} />
+        {/* Handle (diagonal line from bottom-right) */}
+        <div style={{
+          position: 'absolute', bottom: -4, right: -12,
+          width: 40, height: 2.5,
+          background: C.accent,
+          borderRadius: 1,
+          transform: 'rotate(45deg)',
+          transformOrigin: 'left center',
+        }} />
+      </div>
+
+      {/* Main tagline */}
+      <div style={{
+        fontFamily: "'Noto Serif SC', 'Songti SC', serif",
+        fontSize: 72,
+        fontWeight: 700,
+        color: C.text,
+        opacity: mainOpacity,
+        transform: `translateY(${mainY}px)`,
+        letterSpacing: '0.06em',
+        marginBottom: 12,
+      }}>
+        他的思考方式，留下来。
+      </div>
+
+      {/* Subtitle */}
+      <div style={{
+        fontFamily: "'Inter', -apple-system, sans-serif",
+        fontSize: 18,
+        fontWeight: 300,
+        color: C.textMuted,
+        opacity: subOpacity,
+        letterSpacing: '0.16em',
+      }}>
+        蒸馏为可复用的视角顾问
+      </div>
+
+      {/* Tagline */}
+      <div style={{
+        position: 'absolute', bottom: 80,
+        fontFamily: "'Inter', -apple-system, sans-serif",
+        fontSize: 14,
+        fontWeight: 400,
+        color: C.accent,
+        opacity: taglineOpacity * 0.7,
+        letterSpacing: '0.08em',
+      }}>
+        human2skill · 不是他，但记得他怎么想
+      </div>
+    </div>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Main App
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function App() {
+  return (
+    <Stage duration={12} width={1920} height={1080} bgColor={C.bg} loop>
+      {/* Scene 1: 0-4.5s — "那个人要走了" */}
+      <Sprite start={0} end={4.5}>
+        <Scene1 />
+      </Sprite>
+
+      {/* Scene 2: 3.5-8.5s — Thinking dims */}
+      <Sprite start={3.5} end={8.5}>
+        <ThinkingDims />
+      </Sprite>
+
+      {/* Scene 3: 7.5-12s — Distillation */}
+      <Sprite start={7.5} end={12}>
+        <Scene3 />
+      </Sprite>
+    </Stage>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
