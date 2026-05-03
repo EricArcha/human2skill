@@ -3,6 +3,7 @@
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://www.python.org/)
 [![Version](https://img.shields.io/badge/version-2.3.0-blue)](https://github.com/EricArcha/human2skill/blob/main/CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![skills.sh](https://skills.sh/b/EricArcha/human2skill)](https://skills.sh/EricArcha/human2skill)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-orange)](https://claude.ai/code)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-compatible-orange)](https://openclaw.ai)
 
@@ -47,7 +48,7 @@
 ## 5 分钟快速体验
 
 ```text
-1. git clone 本仓库到 ~/.claude/skills/human2skill
+1. npx skills add EricArcha/human2skill
 2. 在 Claude Code 中输入 /human2skill Q20
 3. 回答 15-20 分钟的问题（随时输入 done 退出）
 4. 得到一个可安装的视角顾问 Skill
@@ -206,7 +207,7 @@ outputs/{slug}/
 ### 一键安装（推荐）
 
 ```bash
-npx skills add EricArcha/human2skill --skill human2skill --agent claude-code -g
+npx skills add EricArcha/human2skill
 ```
 
 ### 手动安装

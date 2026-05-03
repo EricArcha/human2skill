@@ -1,3 +1,5 @@
 """human2skill core package."""
 
-__version__ = "2.3.0"
+from importlib.metadata import version
+
+__version__ = version("human2skill")

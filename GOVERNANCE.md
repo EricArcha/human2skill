@@ -194,7 +194,7 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 
 ### 5.1 核心原则
 
-**每改必记，清单勾，不靠记忆。**
+**每改必记，清单勾，不靠记忆。** CHANGELOG 按发布粒度更新，每个功能集一条，不必逐 commit 追加。
 
 本仓库的单一事实源分散在多个文件中（Python 代码、模板、meta-skill、README、GOVERNANCE）。每次修改任何源后，必须按矩阵检查所有受影响的下游文件。v2.0.0 审计发现的 12 个问题中有 4 个是"改了代码忘了同步文档"导致的。
 
@@ -206,7 +206,7 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 
 | 变更类型 | 单一事实源 | 需同步/检查的下游文件 |
 |---------|-----------|---------------------|
-| **版本号** | `pyproject.toml` | `src/human2skill/__init__.py`（`__version__`）、`CHANGELOG.md`（新增版本条目）、`tests/test_import.py`（断言值） |
+| **版本号** | `pyproject.toml` | `CHANGELOG.md`（新增版本条目）、`README.md`（徽章） |
 | **常量/阈值** | `constants.py` | `reviewer.py`（`REVIEW_PASS_THRESHOLDS`）、`quality_check.py`（对应检查项）、`GOVERNANCE.md §2`（阈值描述）、`CLAUDE.md`（如有提及） |
 | **数据模型/路径** | `storage.py` | `flow.py`、`cli.py`、`exporter.py`、`ingest.py`（所有引用 `person_dir` 或 `outputs/` 的文件）；`README.md`（目录结构图） |
 | **命名规则** | `generator.py`（`{slug}-lens`） | `templates/skill/*.md`（`{skill_name}` 占位符）、`README.md`（示例）、`GOVERNANCE.md §3.1`、所有 `examples/` 中的 SKILL.md |

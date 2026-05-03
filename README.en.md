@@ -3,6 +3,7 @@
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://www.python.org/)
 [![Version](https://img.shields.io/badge/version-2.3.0-blue)](https://github.com/EricArcha/human2skill/blob/main/CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![skills.sh](https://skills.sh/b/EricArcha/human2skill)](https://skills.sh/EricArcha/human2skill)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-orange)](https://claude.ai/code)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-compatible-orange)](https://openclaw.ai)
 
@@ -49,7 +50,7 @@ It's not Li Ming. But it remembers how he thought.
 ## Try it in 5 minutes
 
 ```text
-1. git clone this repo to ~/.claude/skills/human2skill
+1. npx skills add EricArcha/human2skill
 2. In Claude Code, type /human2skill Q20
 3. Answer 15-20 minutes of questions (type done to exit anytime)
 4. Get an installable perspective advisor Skill
@@ -209,7 +210,7 @@ Run it yourself: type `/human2skill`. In 15 minutes, you'll have one too.
 ### One-click install (recommended)
 
 ```bash
-npx skills add EricArcha/human2skill --skill human2skill --agent claude-code -g
+npx skills add EricArcha/human2skill
 ```
 
 ### Manual install
