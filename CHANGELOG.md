@@ -5,6 +5,20 @@ All notable changes to human2skill are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-05-04
+
+### Added
+- **skills.sh 兼容**：SKILL.md 补充 `license` + `compatibility` frontmatter，支持 `npx skills add EricArcha/human2skill` 一键安装。
+- **`npx skills add` 安装方式**：README 快速开始新增一键安装命令，作为推荐安装路径。
+
+### Changed
+- **安装说明**：从独立的 `INSTALL.md` 合并到 `README.md` 快速开始节，减少文件数量。
+- **用户文档术语清理**：用户面向文件中将"meta-skill"、"nuwa"、"P0-P2"、"P3"等内部术语替换为自然语言描述。
+
+### Removed
+- `INSTALL.md`（内容合并到 README）
+- `exports/claude-code/SKILL.md`、`exports/openclaw/SKILL.md`（冗余分发副本，`SKILL.md` 为单一事实源）
+
 ## [2.2.0] - 2026-05-03
 
 ### Added
