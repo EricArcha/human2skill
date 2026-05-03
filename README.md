@@ -203,7 +203,13 @@ outputs/{slug}/
 
 ## 快速开始
 
-选择你使用的 AI 工具：
+### 一键安装（推荐）
+
+```bash
+npx skills add EricArcha/human2skill --skill human2skill --agent claude-code -g
+```
+
+### 手动安装
 
 **Claude Code**
 
@@ -215,6 +221,12 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 
 ```bash
 git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
+```
+
+### Python CLI（按需）
+
+```bash
+pip install git+https://github.com/EricArcha/human2skill.git
 ```
 
 然后输入以下任一触发词即可启动：
@@ -233,24 +245,24 @@ git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2
 
 ## 路线图
 
-- [x] P0-P2 核心管线（摄入、访谈、证据、蒸馏、构建、评审、导出）
+- [x] 核心管线（摄入、访谈、证据、蒸馏、构建、评审、导出）
 - [x] Phase 化工作流 + 3 个强制检查点 + 人类在回路
 - [x] 4 层验证漏斗 + 自动化品质检查（7 项）
 - [x] 20 问交互式访谈 + 覆盖率审查
-- [x] nuwa 风格模板 + 证据引用系统
+- [x] 沉浸式第一人称模板 + 证据引用系统
 - [x] 4 种 profile 类型（同事 / 关系 / 导师 / 自己）
 - [x] 多宿主导出（Claude Code / OpenClaw / Codex / Hermes）
 - [x] 3 个完整虚构示例人物
 - [x] 增量更新模式 + slug 去重保护
-- [ ] P3 多人物交叉视角
-- [ ] P3 公开人物语料库
-- [ ] P3 Web UI
+- [ ] 多人物交叉视角
+- [ ] 公开人物语料库
+- [ ] Web UI
 
 ---
 
 ## 开发者入口
 
-human2skill 也是一个 Python CLI，是 meta-skill 工作流的底层工具。
+human2skill 也是一个 Python CLI，是整套工作流的底层工具。
 
 ```bash
 # 安装开发环境

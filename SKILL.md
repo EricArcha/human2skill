@@ -2,9 +2,11 @@
 name: human2skill
 description: 将有限语料和自适应访谈蒸馏为可复用的人物视角顾问 Skill。触发词：human2skill、人物蒸馏、创建人物 Skill、更新人物视角。
 user-invocable: true
+license: MIT
+compatibility: requires Python 3.11+; pip install git+https://github.com/EricArcha/human2skill.git
 ---
 
-<!-- ⚠️ CANONICAL: This is the canonical meta-skill source. Distribution copies in exports/. -->
+<!-- ⚠️ CANONICAL — single source of truth. -->
 
 # human2skill 人物视角蒸馏
 
@@ -15,7 +17,7 @@ user-invocable: true
 
 ## 定位
 
-本 Meta-skill 是人物视角蒸馏的编排工具。产物是 `public_skill/SKILL.md`（可分发视角顾问）+ `private_evidence/`（私有证据包）+ `corpus/`（原文归档）。
+human2skill 是人物视角蒸馏的编排工具。产物是 `public_skill/SKILL.md`（可分发视角顾问）+ `private_evidence/`（私有证据包）+ `corpus/`（原文归档）。
 
 不做角色扮演，不冒充本人，不输出私域原文。
 
@@ -295,7 +297,7 @@ human2skill build --root . --slug zhang-san
 2. 检测 overconfident claims
 3. 运行场景测试回放（Layer 2）
 4. 收集签名语录 + 关键引用（从含 `quote` 字段的条目中提取）
-5. 渲染 Skill 变体（advisor 第三人称观察 / first_person nuwa 沉浸式）并写入 `public_skill/`
+5. 渲染 Skill 变体（advisor 第三人称观察 / first_person 沉浸式第一人称）并写入 `public_skill/`
 6. 运行结构化评审（7 维度评分，confidence_calibration ≥5 为必须）
 7. 写入评审报告和场景报告到 `private_evidence/reviews/`
 8. 快照版本到 `versions/v{n}/`（仅当全部通过）

@@ -206,7 +206,13 @@ Run it yourself: type `/human2skill`. In 15 minutes, you'll have one too.
 
 ## Quick Start
 
-Choose your AI tool:
+### One-click install (recommended)
+
+```bash
+npx skills add EricArcha/human2skill --skill human2skill --agent claude-code -g
+```
+
+### Manual install
 
 **Claude Code**
 
@@ -218,6 +224,12 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 
 ```bash
 git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
+```
+
+### Python CLI (optional)
+
+```bash
+pip install git+https://github.com/EricArcha/human2skill.git
 ```
 
 Then use any of these triggers:
@@ -236,23 +248,23 @@ Requires Python 3.11+. The Agent auto-detects and prompts for installation on fi
 
 ## Roadmap
 
-- [x] P0-P2 core pipeline (intake, interview, evidence, distillation, build, review, export)
+- [x] Core pipeline (intake, interview, evidence, distillation, build, review, export)
 - [x] Phased workflow + 3 mandatory checkpoints + human-in-the-loop
 - [x] 4-layer verification funnel + automated quality checks (7 items)
 - [x] 20-question interactive interview + coverage review
-- [x] Nuwa-style templates + evidence citation system
+- [x] Immersive first-person templates + evidence citation system
 - [x] 4 profile types (colleague / relationship / mentor / self)
 - [x] Multi-host export (Claude Code / OpenClaw / Codex / Hermes)
 - [x] 3 complete fictional example persons
-- [ ] P3 Multi-persona cross-perspective
-- [ ] P3 Public figure corpus library
-- [ ] P3 Web UI
+- [ ] Multi-persona cross-perspective
+- [ ] Public figure corpus library
+- [ ] Web UI
 
 ---
 
 ## For Developers
 
-human2skill is also a Python CLI — the underlying tool for the meta-skill workflow.
+human2skill is also a Python CLI — the underlying tool for the workflow.
 
 ```bash
 # Set up dev environment

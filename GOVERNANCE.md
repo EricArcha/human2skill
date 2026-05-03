@@ -130,10 +130,10 @@ outputs/{slug}/
 git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
 ```
 
-**为什么**：参照 nuwa-skill 和 colleague-skill 的 AgentSkills 标准——用户不需要理解 Python 打包或 CLI 细节，clone 即用。根目录 `SKILL.md` 为 canonical 源，`exports/` 和 `.claude/skills/` 中的副本为同步目标。
+**为什么**：参照 nuwa-skill 和 colleague-skill 的 AgentSkills 标准——用户不需要理解 Python 打包或 CLI 细节，clone 即用。根目录 `SKILL.md` 为单一事实源。
 
 **相关文件**：
-- `INSTALL.md`：安装说明，区分终端用户（git clone）和开发者（make install）
+- `README.md`：快速开始安装说明
 - `Makefile`：开发者便利，`make install` / `make test` / `make clean`
 
 **规则**：生成的 Skill 模板必须在末尾包含溯源签名：
@@ -210,13 +210,13 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 | **命名规则** | `generator.py`（`{slug}-lens`） | `templates/skill/*.md`（`{skill_name}` 占位符）、`README.md`（示例）、`GOVERNANCE.md §3.1`、所有 `examples/` 中的 SKILL.md |
 | **访谈规则** | `interview.py` | `GOVERNANCE.md §1.5`、`docs/design/adaptive-interview.md`、`docs/README.md`、`SKILL.md`（Phase 1 描述） |
 | **验证逻辑** | `reviewer.py` | `flow.py`（`build_from_distillation` 调用）、`quality_check.py`（6 项检查）、`GOVERNANCE.md §2`、`SKILL.md`（Phase 4 描述） |
-| **Meta-skill 流程** | `SKILL.md` | `exports/claude-code/SKILL.md`、`exports/openclaw/SKILL.md`（全部同步副本） |
-| **CLI 参数** | `cli.py` | `INSTALL.md`（示例命令）、`README.md`（快速开始节）、`SKILL.md`（Phase 中的命令示例） |
+| **Skill 流程** | `SKILL.md` | —（单一事实源） |
+| **CLI 参数** | `cli.py` | `README.md`（快速开始节）、`SKILL.md`（Phase 中的命令示例） |
 | **模板内容** | `templates/skill/*.md` | `generator.py`（`render_skill_variant` 中的格式化字段）、`templates/skill/` 中另一个变体（advisor ↔ first_person 同步）、已生成的示例人物 SKILL.md（`examples/` 和 `outputs/`） |
 | **新增/删除文件** | 文件系统 | `pyproject.toml`（`packages` 配置如需要）、`.gitignore`（防止误提交）、`README.md`（如影响目录结构）、`GOVERNANCE.md §3`（如影响约定）、`SKILL.md`（相关文件节） |
-| **安装方式** | `INSTALL.md` | `README.md`（快速开始）、`Makefile`（如有命令变更）、任何引用旧安装方式的文档 |
+| **安装方式** | `README.md`（快速开始） | `Makefile`（如有命令变更）、任何引用旧安装方式的文档 |
 | **隐私/安全规则** | `constants.py`（`PRIVATE_MARKERS`） | `ingest.py`（`_scan_for_pii`）、`reviewer.py`（`structured_review`）、`exporter.py`（`_privacy_check_passed`）、`GOVERNANCE.md §4` |
-| **Skill 安装目录** | `~/.claude/skills/human2skill/` | `exports/`（分发副本与安装目录内容一致）、`INSTALL.md`（安装命令指向正确源） |
+| **Skill 安装目录** | `~/.claude/skills/human2skill/` | `README.md`（快速开始） |
 
 ### 5.3 使用方式
 
@@ -240,7 +240,7 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 2. 在 `templates/profiles/` 中新增对应的 JSON 文件
 3. 在 `interview.py` 的 `PROFILE_QUESTIONS` 中新增该类型的面试问题
 4. 在 `profiles.py` 的 `infer_profile_type()` 中新增推断关键词
-5. 查 §5.2 矩阵中"Meta-skill 流程"行，同步所有 SKILL.md 副本中的 Profile 表格
+5. 查 §5.2 矩阵中"Skill 流程"行，同步 Profile 表格
 6. 新增测试
 
 ### 5.6 修改验证标准（详细流程）
