@@ -27,7 +27,7 @@
 
 ![human2skill demo](demo/demo-animation.gif)
 
-[▶ 下载演示视频（60fps）](https://github.com/EricArcha/human2skill/releases/tag/v2.3.0-demo)  ·  [✦ 探索 human2skill](https://ericarcha.github.io/human2skill/)
+<a href="https://github.com/EricArcha/human2skill/releases/tag/v2.3.0-demo" target="_blank" rel="noopener noreferrer">▶ 下载演示视频（60fps）</a> · <a href="https://ericarcha.github.io/human2skill/" target="_blank" rel="noopener noreferrer">✦ 探索 human2skill</a>
 
 </div>
 
