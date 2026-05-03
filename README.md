@@ -7,7 +7,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-orange)](https://claude.ai/code)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-compatible-orange)](https://openclaw.ai)
 
-[English](README.en.md)
+[![English](https://img.shields.io/badge/lang-English-blue)](README.en.md)
 
 **那个人要走了。他的思考方式，留下来。**
 

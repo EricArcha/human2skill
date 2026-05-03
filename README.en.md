@@ -7,7 +7,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-orange)](https://claude.ai/code)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-compatible-orange)](https://openclaw.ai)
 
-[中文](README.md)
+[![中文](https://img.shields.io/badge/lang-中文-blue)](README.md)
 
 **They're leaving. Their way of thinking doesn't have to.**
 
