@@ -23,9 +23,13 @@
 
 </div>
 
+<div align="center">
+
 ![human2skill demo](demo/demo-animation.gif)
 
-[下载 60fps MP4](demo/demo-animation-60fps.mp4) · [落地页](demo/index.html)
+[▶ 观看完整演示（60fps）](demo/demo-animation-60fps.mp4)  ·  [✦ 探索 human2skill](https://ericarcha.github.io/human2skill/)
+
+</div>
 
 ---
 
