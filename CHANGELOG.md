@@ -49,3 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Variant 技能生成：advisor + first_person。
 - CLI 命令：create, ingest, question, build, review, export, install。
 - 132 个 pytest 测试。
+
+
+---
+
+> Created by [Eric](https://github.com/EricArcha) · [human2skill](https://github.com/EricArcha/human2skill)
+

@@ -194,3 +194,9 @@ outputs/{slug}/
 2. 在 `scripts/quality_check.py` 中同步更新对应的检查逻辑
 3. 更新本文件的第 2 节
 4. 用实际的 SKILL.md 测试新旧阈值效果
+
+
+---
+
+> Created by [Eric](https://github.com/EricArcha) · [human2skill](https://github.com/EricArcha/human2skill)
+

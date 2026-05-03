@@ -1,5 +1,11 @@
 # human2skill — 把一个人变成可复用的视角顾问
 
+[![Python](https://img.shields.io/badge/python-3.11+-blue)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/tests-132%20passed-brightgreen)](https://github.com/EricArcha/human2skill/actions)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/EricArcha/human2skill/blob/main/CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![AgentSkills](https://img.shields.io/badge/standard-AgentSkills-orange)](https://agentskills.io)
+
 [English](README.en.md)
 
 把你熟悉的一个人，提炼成一个可复用的**视角顾问 Skill**。
@@ -81,24 +87,16 @@ outputs/{slug}/
 **Claude Code**
 
 ```bash
-human2skill install \
-  --export exports/claude-code \
-  --target ~/.claude/skills \
-  --name human2skill
+git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
 ```
-
-然后在 Claude Code 中输入 **human2skill** 即可启动。
 
 **OpenClaw**
 
 ```bash
-human2skill install \
-  --export exports/openclaw \
-  --target ~/.openclaw/skills \
-  --name human2skill
+git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
 ```
 
-然后在 OpenClaw 中输入 **human2skill** 即可启动。
+然后输入 **human2skill** 即可启动。首次使用需 Python 3.11+，Agent 会自动检测并提示。
 
 触发词（Claude Code 和 OpenClaw 通用）：
 
@@ -135,3 +133,9 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 开发细节见 [CLAUDE.md](CLAUDE.md)，规则体系见 [docs/GOVERNANCE.md](docs/GOVERNANCE.md)，版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 仓库包含三个示例人物（`examples/` 目录），每个都包含完整的私有证据、公开 Skill、评审报告和版本快照。
+
+
+---
+
+> Created by [Eric](https://github.com/EricArcha) · [human2skill](https://github.com/EricArcha/human2skill)
+

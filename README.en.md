@@ -1,5 +1,11 @@
 # human2skill — Turn someone you know into a reusable perspective advisor
 
+[![Python](https://img.shields.io/badge/python-3.11+-blue)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/tests-132%20passed-brightgreen)](https://github.com/EricArcha/human2skill/actions)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/EricArcha/human2skill/blob/main/CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![AgentSkills](https://img.shields.io/badge/standard-AgentSkills-orange)](https://agentskills.io)
+
 [中文](README.md)
 
 Take what you know about a real person and distill it into a reusable **perspective advisor Skill**.
@@ -83,24 +89,16 @@ Choose your AI tool:
 **Claude Code**
 
 ```bash
-human2skill install \
-  --export exports/claude-code \
-  --target ~/.claude/skills \
-  --name human2skill
+git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2skill
 ```
-
-Then type **human2skill** in Claude Code to launch.
 
 **OpenClaw**
 
 ```bash
-human2skill install \
-  --export exports/openclaw \
-  --target ~/.openclaw/skills \
-  --name human2skill
+git clone https://github.com/EricArcha/human2skill.git ~/.openclaw/skills/human2skill
 ```
 
-Then type **human2skill** in OpenClaw to launch.
+Then type **human2skill** to launch. Requires Python 3.11+ — the Agent auto-detects and prompts if setup is needed.
 
 Trigger words (shared across Claude Code and OpenClaw):
 
@@ -137,3 +135,9 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 For development details, see [CLAUDE.md](CLAUDE.md). For the governance and rule system, see [docs/GOVERNANCE.md](docs/GOVERNANCE.md). For version history, see [CHANGELOG.md](CHANGELOG.md).
 
 The repo includes three example persons (in the `examples/` directory), each with a complete private evidence pack, public Skill, review reports, and version snapshots.
+
+
+---
+
+> Created by [Eric](https://github.com/EricArcha) · [human2skill](https://github.com/EricArcha/human2skill)
+

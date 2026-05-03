@@ -368,3 +368,9 @@ human2skill install --export outputs/zhang-san/exports/claude-code --target ~/.c
 - `schemas/` — 数据 schema（person.meta、evidence_pack、distillation）
 - `templates/profiles/` — 四类 Profile Preset
 - `templates/skill/` — Skill 渲染模板
+
+
+---
+
+> Created by [Eric](https://github.com/EricArcha) · [human2skill](https://github.com/EricArcha/human2skill)
+

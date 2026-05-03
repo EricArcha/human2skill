@@ -47,3 +47,5 @@ user-invocable: true
 ## 证据和置信度摘要
 
 {confidence_summary}
+
+> 本 Skill 由 [human2skill](https://github.com/EricArcha/human2skill) 生成
