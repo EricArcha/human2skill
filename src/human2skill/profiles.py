@@ -1,18 +1,12 @@
 import json
 from pathlib import Path
 
-
-PROFILE_TYPES = ("colleague", "relationship", "mentor", "self")
+from human2skill.constants import PROFILE_TYPES
+from human2skill.schemas import resource_path
 
 
 def profile_dir() -> Path:
-    """Resolve profile template directory, works in both dev and installed environments."""
-    try:
-        from importlib.resources import files
-
-        return files("human2skill").joinpath("templates", "profiles")
-    except Exception:
-        return Path(__file__).resolve().parent / "templates" / "profiles"
+    return resource_path("templates", "profiles")
 
 
 def load_profile(profile_type: str) -> dict:

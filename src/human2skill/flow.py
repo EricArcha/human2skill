@@ -13,6 +13,7 @@ from human2skill.evidence_builder import empty_evidence_pack
 from human2skill.generator import render_skill_variants, write_skill_variants
 from human2skill.intake import create_person
 from human2skill.reviewer import structured_review
+from human2skill.scenario import build_scenario_replay_report
 from human2skill.storage import snapshot_version, write_json
 from human2skill.timeutils import utc_now_iso
 
@@ -39,7 +40,7 @@ def create_project_person(
     voice_mode: str | None = None,
     now: str | None = None,
 ) -> Path:
-    """Initialize a complete person project at root/people/slug.
+    """Initialize a complete person project at root/outputs/slug.
 
     Creates the full directory layout, person.meta.json, an empty evidence
     pack, and an empty source index.
@@ -127,14 +128,31 @@ def build_from_distillation(
             generated_at=resolved_generated_at,
         )
 
+    # Run scenario replay if scenario_tests are present in distillation.
+    scenario_tests = distillation.get("scenario_tests", [])
+    scenario_report = None
+    if scenario_tests:
+        scenario_report = build_scenario_replay_report(
+            person_slug=person_slug,
+            variant="advisor",
+            generated_at=resolved_generated_at,
+            scenarios=scenario_tests,
+        )
+
     # Write each review into the reviews directory.
     reviews_dir = base / "private_evidence" / "reviews"
     for variant_name, report in reviews.items():
         review_path = reviews_dir / f"{variant_name}.json"
         write_json(review_path, report)
 
-    # Only snapshot if all variant reviews passed.
+    # Write scenario report if available.
+    if scenario_report is not None:
+        write_json(reviews_dir / "scenario.json", scenario_report)
+
+    # Only snapshot if all variant reviews passed AND scenario report passes.
     all_passed = all(report["passed"] for report in reviews.values())
+    if scenario_report is not None:
+        all_passed = all_passed and scenario_report.get("passed", False)
     if all_passed:
         lifecycle = meta.get("lifecycle", {})
         version = lifecycle.get("version", "v1")
@@ -149,6 +167,7 @@ def build_from_distillation(
         "review": advisor_review,
         "variants": variants,
         "snapshot": snapshot,
+        "scenario": scenario_report,
     }
 
 

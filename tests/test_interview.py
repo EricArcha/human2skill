@@ -1,8 +1,6 @@
 from human2skill.interview import (
     initial_coverage,
-    next_question,
     next_question_for_profile,
-    should_continue,
 )
 
 
@@ -23,23 +21,39 @@ def test_initial_coverage_includes_value_order_and_anti_patterns():
 def test_next_question_targets_first_missing_dimension():
     coverage = initial_coverage()
 
-    assert "这个人是谁" in next_question(coverage, turn_count=0)
+    question = next_question_for_profile(
+        coverage,
+        profile_type="colleague",
+        perspective="observer_answer",
+        turn_count=0,
+    )
+    assert "这个人是谁" in question
 
 
 def test_turn_twenty_prompts_before_extending():
     coverage = initial_coverage()
     coverage["identity_context"] = "medium"
 
-    question = next_question(coverage, turn_count=20)
+    question = next_question_for_profile(
+        coverage,
+        profile_type="colleague",
+        perspective="observer_answer",
+        turn_count=20,
+    )
+    assert "访谈预算上限" in question
+    assert "mental_models" in question
 
-    assert "接近默认访谈预算" in question
-    assert "复杂问题" in question
 
-
-def test_should_stop_when_all_dimensions_medium_or_high():
+def test_all_dimensions_medium_or_high_returns_completion():
     coverage = {key: "medium" for key in initial_coverage()}
 
-    assert should_continue(coverage) is False
+    result = next_question_for_profile(
+        coverage,
+        profile_type="colleague",
+        perspective="observer_answer",
+        turn_count=1,
+    )
+    assert "信息覆盖已经足够" in result
 
 
 def test_self_perspective_uses_self_wording():

@@ -50,7 +50,7 @@
   "passed": true,
   "scores": {
     "evidence_consistency": 4,
-    "confidence_calibration": 4,
+    "confidence_calibration": 5,
     "honest_boundary": 5,
     "privacy_safety": 5
   },

@@ -1,29 +1,15 @@
+from human2skill.constants import PRIVATE_MARKERS
 from human2skill.schemas import validate_document
-
-PRIVATE_MARKERS = ("完整聊天记录", "身份证", "手机号", "原始私聊", "朋友圈原文")
 
 REVIEW_PASS_THRESHOLDS = {
     "evidence_consistency": 4,
-    "confidence_calibration": 4,
+    "confidence_calibration": 5,
     "honest_boundary": 5,
     "privacy_safety": 5,
     "expression_similarity": 4,
     "thinking_utility": 4,
     "profile_fit": 4,
 }
-
-
-def review_public_skill(content: str) -> dict:
-    failures = []
-    if "我就是" in content:
-        failures.append("claims_to_be_person")
-    if "诚实边界" not in content:
-        failures.append("missing_honest_boundaries")
-    if any(marker in content for marker in PRIVATE_MARKERS):
-        failures.append("contains_private_raw_material")
-    if "不代表本人观点" not in content:
-        failures.append("missing_disclaimer")
-    return {"passed": not failures, "failures": failures}
 
 
 def _score_evidence_consistency(content: str) -> int:

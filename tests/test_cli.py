@@ -52,7 +52,7 @@ def test_cli_create_and_ingest(tmp_path: Path):
 
     assert "src-0001" in ingest.stdout
     index = json.loads(
-        (tmp_path / "people/li-ming/private_evidence/source_index.json").read_text(encoding="utf-8")
+        (tmp_path / "outputs/li-ming/private_evidence/source_index.json").read_text(encoding="utf-8")
     )
     assert index["sources"][0]["source_id"] == "src-0001"
 
@@ -71,7 +71,7 @@ def test_cli_question_returns_next_dimension(tmp_path: Path):
     )
 
     # Write an initial coverage file (all missing)
-    coverage_path = tmp_path / "people/li-ming/private_evidence/interviews/coverage.json"
+    coverage_path = tmp_path / "outputs/li-ming/private_evidence/interviews/coverage.json"
     coverage_path.parent.mkdir(parents=True, exist_ok=True)
     coverage_path.write_text(json.dumps({
         "identity_context": "missing",
@@ -114,7 +114,7 @@ def test_cli_question_completes_when_covered(tmp_path: Path):
     )
 
     # All dimensions high — should return completion message
-    coverage_path = tmp_path / "people/li-ming/private_evidence/interviews/coverage.json"
+    coverage_path = tmp_path / "outputs/li-ming/private_evidence/interviews/coverage.json"
     coverage_path.parent.mkdir(parents=True, exist_ok=True)
     coverage_path.write_text(json.dumps({
         "identity_context": "high",

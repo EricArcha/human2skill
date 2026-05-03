@@ -1,5 +1,5 @@
 ---
-name: colleague-li-ming-perspective
+name: colleague-li-ming-lens
 description: 李明 的视角顾问 Skill
 user-invocable: true
 ---

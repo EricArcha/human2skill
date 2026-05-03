@@ -98,7 +98,7 @@ The approved spec says only blocking conflicts should stop review/export. Accept
 ```python
 REVIEW_PASS_THRESHOLDS = {
     "evidence_consistency": 4,
-    "confidence_calibration": 4,
+    "confidence_calibration": 5,
     "honest_boundary": 5,
     "privacy_safety": 5,
     "expression_similarity": 4,

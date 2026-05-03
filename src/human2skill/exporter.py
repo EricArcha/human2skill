@@ -4,11 +4,9 @@ import json
 import shutil
 from pathlib import Path
 
-from human2skill.constants import HOSTS
+from human2skill.constants import HOSTS, PRIVATE_MARKERS
 from human2skill.schemas import validate_document
 from human2skill.timeutils import utc_now_iso
-
-PRIVATE_MARKERS = ("完整聊天记录", "身份证", "手机号", "原始私聊", "朋友圈原文")
 
 
 def review_path_for_variant(base: Path, variant: str) -> Path | None:

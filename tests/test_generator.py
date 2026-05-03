@@ -1,4 +1,4 @@
-from human2skill.generator import render_skill, render_skill_variant, render_skill_variants
+from human2skill.generator import render_skill_variant, render_skill_variants
 
 
 def full_distilled_sections():
@@ -14,9 +14,9 @@ def full_distilled_sections():
     }
 
 
-def test_render_skill_uses_perspective_advisor_protocol():
-    meta = {"slug": "zhang-san", "display_name": "张三"}
-    distilled = {
+def test_render_advisor_variant_uses_lens_naming():
+    meta = {"slug": "zhang-san", "display_name": "张三", "voice_mode": "advisor"}
+    sections = {
         "mental_models": ["先问目标和 impact，再讨论方案。"],
         "expression_dna": ["短句、反问、结论先行。"],
         "decision_heuristics": ["没有明确收益时倾向推迟。"],
@@ -25,11 +25,11 @@ def test_render_skill_uses_perspective_advisor_protocol():
         "honest_boundaries": ["亲密关系场景证据不足。"]
     }
 
-    content = render_skill(meta, distilled)
+    content = render_skill_variant(meta, sections, variant="advisor")
 
+    assert "zhang-san-lens" in content
     assert "张三 视角顾问" in content
     assert "不代表本人观点" in content
-    assert "不声称自己就是 张三 本人" in content
     assert "先问目标和 impact" in content
 
 

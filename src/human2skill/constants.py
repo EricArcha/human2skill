@@ -42,3 +42,7 @@ REVIEW_SCORE_KEYS = (
     "thinking_utility",
     "profile_fit",
 )
+
+PRIVATE_MARKERS = ("完整聊天记录", "身份证", "手机号", "原始私聊", "朋友圈原文")
+
+INTERVIEW_BUDGET = 20

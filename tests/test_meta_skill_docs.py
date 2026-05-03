@@ -9,13 +9,14 @@ def test_meta_skill_documents_required_flow():
     assert "distillation.json" in content
     assert "summary_only" in content
     assert "不输出私域原文" in content
-    assert "advisor" in content
-    assert "first_person" in content
+    assert "outputs/{slug}" in content
+    assert "{slug}-lens" in content
+    assert "quality_check.py" in content
 
 
 def test_meta_skill_mentions_checkpoints():
     content = Path("human2skill-meta/SKILL.md").read_text(encoding="utf-8")
 
-    assert "Source Coverage Checkpoint" in content
-    assert "Distillation Checkpoint" in content
-    assert "Review Checkpoint" in content
+    assert "Checkpoint A" in content
+    assert "Checkpoint B" in content
+    assert "Checkpoint C" in content

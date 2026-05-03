@@ -10,12 +10,18 @@ import json
 import sys
 from pathlib import Path
 
+from human2skill.constants import PROFILE_TYPES, VOICE_MODES
 from human2skill.exporter import export_skill, load_review_for_variant
 from human2skill.flow import build_from_distillation, create_project_person
 from human2skill.ingest import ingest_file
 from human2skill.installer import install_export
 from human2skill.interview import initial_coverage, next_question_for_profile
 from human2skill.storage import person_dir
+
+
+def _handle_error(msg: str) -> None:
+    print(f"error: {msg}", file=sys.stderr)
+    sys.exit(1)
 
 
 def _cmd_create(args: argparse.Namespace) -> None:
@@ -42,7 +48,10 @@ def _cmd_question(args: argparse.Namespace) -> None:
     coverage_path = base / "private_evidence" / "interviews" / "coverage.json"
 
     if coverage_path.exists():
-        coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+        try:
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            _handle_error(f"Failed to read coverage file: {coverage_path}: {exc}")
     else:
         coverage = initial_coverage()
 
@@ -64,12 +73,13 @@ def _cmd_build(args: argparse.Namespace) -> None:
         else base / "private_evidence" / "distillation.json"
     )
     if not distillation_path.exists():
-        print(
-            f"error: distillation file not found: {distillation_path}", file=sys.stderr
-        )
-        sys.exit(1)
+        _handle_error(f"distillation file not found: {distillation_path}")
 
-    distillation = json.loads(distillation_path.read_text(encoding="utf-8"))
+    try:
+        distillation = json.loads(distillation_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        _handle_error(f"Failed to read distillation file: {distillation_path}: {exc}")
+
     result = build_from_distillation(base, distillation)
     passed = result["review"].get("passed", False)
     print(f"built: {base} (review passed={passed})")
@@ -85,13 +95,11 @@ def _cmd_review(args: argparse.Namespace) -> None:
         return
 
     if not reviews_dir.is_dir():
-        print("error: no reviews directory found", file=sys.stderr)
-        sys.exit(1)
+        _handle_error("no reviews directory found")
 
     review_files = sorted(reviews_dir.glob("*.json"))
     if not review_files:
-        print("error: no review files found", file=sys.stderr)
-        sys.exit(1)
+        _handle_error("no review files found")
 
     # Print the latest review report as JSON
     latest_review = json.loads(review_files[-1].read_text(encoding="utf-8"))
@@ -124,10 +132,10 @@ def main() -> None:
     p_create.add_argument("--root", required=True, help="Root directory for people storage")
     p_create.add_argument("--slug", required=True, help="Person identifier slug")
     p_create.add_argument("--name", required=True, help="Display name")
-    p_create.add_argument("--profile", default=None, help="Profile type (colleague/relationship/mentor/self)")
+    p_create.add_argument("--profile", default=None, choices=PROFILE_TYPES, help="Profile type")
     p_create.add_argument("--relationship", required=True, help="Relationship to user")
     p_create.add_argument("--use-case", required=True, help="Primary use case")
-    p_create.add_argument("--voice-mode", default="advisor", help="Voice mode (advisor/first_person/both)")
+    p_create.add_argument("--voice-mode", default="advisor", choices=VOICE_MODES, help="Voice mode")
 
     # ---- ingest ----
     p_ingest = sub.add_parser("ingest", help="Ingest a source file into a person project")
@@ -139,8 +147,8 @@ def main() -> None:
     p_question = sub.add_parser("question", help="Get the next interview question for a person")
     p_question.add_argument("--root", required=True)
     p_question.add_argument("--slug", required=True)
-    p_question.add_argument("--profile", required=True, help="Profile type (colleague/relationship/mentor/self)")
-    p_question.add_argument("--perspective", required=True, help="self_answer or observer_answer")
+    p_question.add_argument("--profile", required=True, choices=PROFILE_TYPES, help="Profile type")
+    p_question.add_argument("--perspective", required=True, choices=("self_answer", "observer_answer"), help="Answer perspective")
     p_question.add_argument("--turn", type=int, required=True, help="Current interview turn number")
 
     # ---- build ----
@@ -159,8 +167,8 @@ def main() -> None:
     p_export = sub.add_parser("export", help="Export a skill for a target host")
     p_export.add_argument("--root", required=True)
     p_export.add_argument("--slug", required=True)
-    p_export.add_argument("--host", required=True, help="Target host (codex/claude-code/openclaw/hermes)")
-    p_export.add_argument("--variant", default="advisor", help="Skill variant (default: advisor)")
+    p_export.add_argument("--host", required=True, choices=("codex", "claude-code", "openclaw", "hermes"), help="Target host")
+    p_export.add_argument("--variant", default="advisor", choices=("advisor", "first_person"), help="Skill variant")
 
     # ---- install ----
     p_install = sub.add_parser("install", help="Install an exported skill into a target directory")

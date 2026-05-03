@@ -1,3 +1,5 @@
+from human2skill.constants import INTERVIEW_BUDGET
+
 CORE_DIMENSIONS = (
     "identity_context",
     "mental_models",
@@ -111,28 +113,38 @@ def next_question_for_profile(
         if coverage.get(dimension) in ("missing", "low"):
             question = _get_question(dimension, profile_type, perspective)
 
-            if turn_count >= 20:
+            if turn_count >= INTERVIEW_BUDGET:
                 return (
-                    "目前已经接近默认访谈预算，但仍缺少关键信息。"
-                    f" 下一步建议补充：{question}"
+                    f"已达到访谈预算上限（{INTERVIEW_BUDGET}轮）。剩余缺口维度：{dimension}。"
+                    "请确认是否延展访谈，或同意在相关结论上标低置信度。"
                 )
             return question
 
     return "信息覆盖已经足够，可以进入蒸馏。"
 
 
-def next_question(coverage: dict[str, str], turn_count: int) -> str:
-    """Backward-compatible question selector.
+def assess_coverage(coverage: dict[str, str]) -> dict:
+    """Assess interview coverage quality.
 
-    Delegates to next_question_for_profile with default observer perspective.
+    Returns a dict with:
+      - dimensions_covered: count of dimensions at medium/high
+      - total_dimensions: total dimension count
+      - sufficient: whether >=4 dimensions are medium/high
+      - has_boundary: whether honest_boundaries has at least one low-confidence entry
+      - gaps: list of dimensions still missing or low
     """
-    return next_question_for_profile(
-        coverage,
-        profile_type="relationship",
-        perspective="observer_answer",
-        turn_count=turn_count,
+    covered = sum(
+        1 for v in coverage.values() if v in ("medium", "high")
     )
-
-
-def should_continue(coverage: dict[str, str]) -> bool:
-    return any(value in ("missing", "low") for value in coverage.values())
+    has_boundary = coverage.get("honest_boundaries") in ("low", "medium", "high")
+    gaps = [
+        dim for dim in CORE_DIMENSIONS
+        if coverage.get(dim) in ("missing", "low")
+    ]
+    return {
+        "dimensions_covered": covered,
+        "total_dimensions": len(CORE_DIMENSIONS),
+        "sufficient": covered >= 4 and has_boundary,
+        "has_boundary": has_boundary,
+        "gaps": gaps,
+    }

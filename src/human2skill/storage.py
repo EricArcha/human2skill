@@ -4,12 +4,13 @@ from pathlib import Path
 
 
 def person_dir(root: Path, slug: str) -> Path:
-    return root / "people" / slug
+    return root / "outputs" / slug
 
 
 def initialize_person_dir(root: Path, slug: str) -> Path:
     base = person_dir(root, slug)
     for relative in (
+        "corpus/raw",
         "public_skill",
         "public_skill/variants/advisor",
         "public_skill/variants/first_person",

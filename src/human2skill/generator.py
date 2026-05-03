@@ -1,38 +1,16 @@
 from pathlib import Path
 
+from human2skill.schemas import resource_path
+
+
+def template_root() -> Path:
+    return resource_path("templates", "skill")
+
 
 def render_list(items: list[str]) -> str:
     if not items:
         return "- 证据不足，暂不生成高置信度结论。"
     return "\n".join(f"- {item}" for item in items)
-
-
-def template_root() -> Path:
-    """Resolve template directory, works in both dev and installed environments."""
-    try:
-        from importlib.resources import files
-
-        return files("human2skill").joinpath("templates", "skill")
-    except Exception:
-        return Path(__file__).resolve().parent / "templates" / "skill"
-
-
-def render_skill(meta: dict, distilled: dict, template_path: Path | None = None) -> str:
-    template = (template_path or template_root() / "base-perspective-advisor.md").read_text(encoding="utf-8")
-    skill_name = f"{meta['slug']}-perspective"
-    return template.format(
-        skill_name=skill_name,
-        description=f"{meta['display_name']} 的视角顾问 Skill",
-        display_name=meta["display_name"],
-        mental_models=render_list(distilled.get("mental_models", [])),
-        expression_dna=render_list(distilled.get("expression_dna", [])),
-        decision_heuristics=render_list(distilled.get("decision_heuristics", [])),
-        profile_specific=render_list(distilled.get("profile_specific", [])),
-        pressure_response=render_list(distilled.get("pressure_response", [])),
-        value_order=render_list(distilled.get("value_order", [])),
-        anti_patterns=render_list(distilled.get("anti_patterns", [])),
-        honest_boundaries=render_list(distilled.get("honest_boundaries", [])),
-    )
 
 
 def _section_keys() -> tuple[str, ...]:
@@ -58,7 +36,7 @@ def _confidence_summary(sections: dict) -> str:
 def render_skill_variant(meta: dict, sections: dict, variant: str = "advisor") -> str:
     template_path = template_root() / f"{variant}.md"
     template = template_path.read_text(encoding="utf-8")
-    skill_name = f"{meta['slug']}-perspective"
+    skill_name = f"{meta['slug']}-lens"
     return template.format(
         skill_name=skill_name,
         description=f"{meta['display_name']} 的视角顾问 Skill",

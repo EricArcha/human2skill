@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from human2skill.constants import SOURCE_KINDS
+from human2skill.constants import PRIVATE_MARKERS, SOURCE_KINDS
 from human2skill.schemas import validate_document
 from human2skill.timeutils import utc_now_iso
 
@@ -33,6 +33,47 @@ def write_source_index(base: Path, payload: dict) -> None:
     validate_document("source_index.schema.json", payload)
     path = source_index_path(base)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def corpus_index_path(base: Path) -> Path:
+    return base / "corpus" / "index.json"
+
+
+def load_corpus_index(base: Path) -> dict:
+    path = corpus_index_path(base)
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    return {
+        "schema_version": "1",
+        "person_slug": base.name,
+        "sources": [],
+    }
+
+
+def write_corpus_index(base: Path, payload: dict) -> None:
+    path = corpus_index_path(base)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def save_raw_corpus(base: Path, source_id: str, text: str, title: str, source_kind: str) -> Path:
+    """Save raw text to corpus/raw/{source_id}.txt and update index."""
+    raw_dir = base / "corpus" / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = raw_dir / f"{source_id}.txt"
+    raw_path.write_text(text, encoding="utf-8")
+
+    index = load_corpus_index(base)
+    index["sources"].append({
+        "source_id": source_id,
+        "file": f"raw/{source_id}.txt",
+        "type": source_kind,
+        "title": title,
+        "word_count": len(text.split()),
+        "pii_checked": False,
+    })
+    write_corpus_index(base, index)
+    return raw_path
 
 
 def next_source_id(index: dict) -> str:
@@ -86,7 +127,17 @@ def add_text_source(
     )
     index["sources"].append(source)
     write_source_index(base, index)
+    save_raw_corpus(base, source["source_id"], text, title, source_kind)
     return source
+
+
+def _scan_for_pii(text: str) -> list[str]:
+    """Scan text for sensitive PII markers. Returns list of found marker types."""
+    found = []
+    for marker in PRIVATE_MARKERS:
+        if marker in text:
+            found.append(marker)
+    return found
 
 
 def ingest_file(
@@ -113,6 +164,14 @@ def ingest_file(
         text = file_path.read_text(encoding="utf-8")
 
     title = file_path.name
+
+    pii_found = _scan_for_pii(text)
+    if pii_found:
+        raise ValueError(
+            f"PII markers found in {file_path}: {', '.join(pii_found)}. "
+            "Redact sensitive content before ingesting."
+        )
+
     created_at = now if now is not None else utc_now_iso()
     index = load_source_index(base)
     source = _build_source_entry(
@@ -125,4 +184,5 @@ def ingest_file(
     )
     index["sources"].append(source)
     write_source_index(base, index)
+    save_raw_corpus(base, source["source_id"], text, title, source_kind)
     return source

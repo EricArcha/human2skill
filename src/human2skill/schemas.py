@@ -10,7 +10,7 @@ class SchemaValidationError(ValueError):
     pass
 
 
-def _resource_path(subdir: str, name: str) -> Path:
+def resource_path(subdir: str, name: str = "") -> Path:
     """Resolve a resource path, works in both dev and installed environments."""
     try:
         from importlib.resources import files
@@ -21,7 +21,7 @@ def _resource_path(subdir: str, name: str) -> Path:
 
 
 def load_schema(name: str) -> dict:
-    path = _resource_path("schemas", name)
+    path = resource_path("schemas", name)
     return json.loads(path.read_text(encoding="utf-8"))
 
 

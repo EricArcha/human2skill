@@ -141,7 +141,7 @@ human2skill/
     repos/
       colleague-skill/
       nuwa-skill/
-  people/
+  outputs/
     {slug}/
       person.meta.json
       public_skill/

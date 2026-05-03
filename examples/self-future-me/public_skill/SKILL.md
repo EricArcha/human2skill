@@ -1,5 +1,5 @@
 ---
-name: self-future-me-perspective
+name: self-future-me-lens
 description: 未来的我 的视角顾问 Skill
 user-invocable: true
 ---

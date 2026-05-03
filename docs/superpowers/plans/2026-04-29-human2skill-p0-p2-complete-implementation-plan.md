@@ -1196,7 +1196,7 @@ git commit -m "feat: validate agent distillation output"
 **Files:**
 - Create: `templates/skill/advisor.md`
 - Create: `templates/skill/first-person.md`
-- Modify: `templates/skill/base-perspective-advisor.md`
+- Modify: `templates/skill/advisor.md`
 - Modify: `src/human2skill/generator.py`
 - Test: `tests/test_generator.py`
 
@@ -1747,7 +1747,7 @@ Rules:
 
 - Validate host against `HOSTS`.
 - Refuse export when latest review is missing or not passed.
-- Copy selected `SKILL.md` into `people/{slug}/exports/{host}/`.
+- Copy selected `SKILL.md` into `outputs/{slug}/exports/{host}/`.
 - Write `export_manifest.json` and validate schema.
 - Host-specific package may be minimal in this task: `SKILL.md`, `README.md`, `export_manifest.json`.
 
@@ -2148,7 +2148,7 @@ def test_cli_create_and_ingest(tmp_path: Path):
     ingest = run_cli("ingest", "--root", str(tmp_path), "--slug", "li-ming", "--file", str(note), cwd=tmp_path)
 
     assert "src-0001" in ingest.stdout
-    index = json.loads((tmp_path / "people/li-ming/private_evidence/source_index.json").read_text(encoding="utf-8"))
+    index = json.loads((tmp_path / "outputs/li-ming/private_evidence/source_index.json").read_text(encoding="utf-8"))
     assert index["sources"][0]["source_id"] == "src-0001"
 ```
 

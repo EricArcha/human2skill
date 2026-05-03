@@ -1,5 +1,5 @@
 ---
-name: relationship-chen-yu-perspective
+name: relationship-chen-yu-lens
 description: 陈雨 的视角顾问 Skill
 user-invocable: true
 ---
