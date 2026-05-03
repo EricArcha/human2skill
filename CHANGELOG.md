@@ -5,6 +5,28 @@ All notable changes to human2skill are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-05-03
+
+### Added
+- **`human2skill interview`** CLI 子命令：交互式 20 问访谈循环，支持 skip/done 随时退出。
+- **`human2skill check-coverage`** CLI 子命令：程序化输出 Checkpoint A 覆盖率表格。
+- **`/human2skill Q20`** 快捷入口：直接启动 20 问快速蒸馏体验。
+- **证据引用系统**：distillation schema 新增 `quote`/`quote_source` 字段（≤280 字符）。生成 SKILL.md 时自动收集签名语录和关键引用段落。
+- **nuwa 风格 first_person 模板**：沉浸式第一人称，首次激活说一次免责声明后全程自然对话。含角色扮演规则、身份卡、内部路由、示例对话。
+- **advisor 模板增强**：结构化格式、签名语录、关键引用、调研来源附录。
+
+### Changed
+- **voice_mode 默认值**：改为按 profile 自动推断 — `self`/`relationship` → `first_person`，`colleague`/`mentor` → `advisor`。
+- **隐私条款**：从"不输出私域原文"改为"可引用脱敏后的有限原话"（first_person 默认启用，advisor 可选）。
+- **`format_distilled_item()`** 改为按 section 类型输出结构化 Markdown。
+- **reviewer** 兼容新旧两种模板格式（bullet 和 block 格式均能正确计分）。
+- **docs/** 重组：恢复 `docs/superpowers/specs/` 和 `docs/superpowers/plans/`，移除 `docs/archive/`。
+
+### Fixed
+- `self` profile 不再错误默认 `advisor` 而应使用 `first_person`。
+- reviewer `_count_section_items` 对诚实边界的计数不再误过滤"证据不足"内容。
+- first_person 模板 disclaimer 同时支持"不代表本人观点"和"非本人观点"两种表述。
+
 ## [2.0.0] - 2026-05-03
 
 ### Added

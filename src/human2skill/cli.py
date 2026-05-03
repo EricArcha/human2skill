@@ -15,7 +15,12 @@ from human2skill.exporter import export_skill, load_review_for_variant
 from human2skill.flow import build_from_distillation, create_project_person
 from human2skill.ingest import ingest_file
 from human2skill.installer import install_export
-from human2skill.interview import initial_coverage, next_question_for_profile
+from human2skill.interview import (
+    assess_coverage,
+    initial_coverage,
+    next_question_for_profile,
+    run_interview_loop,
+)
 from human2skill.storage import person_dir
 
 
@@ -62,6 +67,51 @@ def _cmd_question(args: argparse.Namespace) -> None:
         turn_count=args.turn,
     )
     print(question)
+
+
+def _cmd_interview(args: argparse.Namespace) -> None:
+    base = person_dir(Path(args.root), args.slug)
+    interviews_dir = base / "private_evidence" / "interviews"
+    coverage_path = interviews_dir / "coverage.json"
+
+    if coverage_path.exists():
+        try:
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            _handle_error(f"Failed to read coverage file: {coverage_path}: {exc}")
+    else:
+        coverage = None
+
+    run_interview_loop(
+        profile_type=args.profile,
+        perspective=args.perspective,
+        output_dir=interviews_dir,
+        coverage=coverage,
+    )
+
+
+def _cmd_check_coverage(args: argparse.Namespace) -> None:
+    base = person_dir(Path(args.root), args.slug)
+    coverage_path = base / "private_evidence" / "interviews" / "coverage.json"
+
+    if not coverage_path.exists():
+        coverage = initial_coverage()
+    else:
+        try:
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            _handle_error(f"Failed to read coverage file: {coverage_path}: {exc}")
+
+    assessment = assess_coverage(coverage)
+
+    print("=" * 60)
+    print("⛔ Checkpoint A — 覆盖率审查")
+    print("=" * 60)
+    print(f"维度覆盖: {assessment['dimensions_covered']}/{assessment['total_dimensions']} ≥ medium")
+    print(f"诚实边界: {'已标注' if assessment['has_boundary'] else '未标注'}")
+    print(f"缺口维度: {', '.join(assessment['gaps']) if assessment['gaps'] else '无'}")
+    print(f"状态: {'✅ 满足进入蒸馏条件' if assessment['sufficient'] else '❌ 建议继续补充或签署降级确认'}")
+    print("=" * 60)
 
 
 def _cmd_build(args: argparse.Namespace) -> None:
@@ -151,6 +201,18 @@ def main() -> None:
     p_question.add_argument("--perspective", required=True, choices=("self_answer", "observer_answer"), help="Answer perspective")
     p_question.add_argument("--turn", type=int, required=True, help="Current interview turn number")
 
+    # ---- interview ----
+    p_interview = sub.add_parser("interview", help="Run the interactive 20-question interview")
+    p_interview.add_argument("--root", required=True)
+    p_interview.add_argument("--slug", required=True)
+    p_interview.add_argument("--profile", required=True, choices=PROFILE_TYPES, help="Profile type")
+    p_interview.add_argument("--perspective", required=True, choices=("self_answer", "observer_answer"), help="Answer perspective")
+
+    # ---- check-coverage ----
+    p_check = sub.add_parser("check-coverage", help="Show interview coverage summary")
+    p_check.add_argument("--root", required=True)
+    p_check.add_argument("--slug", required=True)
+
     # ---- build ----
     p_build = sub.add_parser("build", help="Build skill from a distillation payload")
     p_build.add_argument("--root", required=True)
@@ -187,6 +249,8 @@ def main() -> None:
         "create": _cmd_create,
         "ingest": _cmd_ingest,
         "question": _cmd_question,
+        "interview": _cmd_interview,
+        "check-coverage": _cmd_check_coverage,
         "build": _cmd_build,
         "review": _cmd_review,
         "export": _cmd_export,

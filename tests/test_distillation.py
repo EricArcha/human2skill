@@ -118,8 +118,10 @@ def test_format_distilled_item_formats_basic_item():
     }
 
     result = format_distilled_item(item)
-    assert "Impact first: 先问 impact" in result
-    assert "(medium; 会议摘要支持。)" in result
+    assert "**Impact first**" in result
+    assert "先问 impact，再讨论方案。" in result
+    assert "证据: 会议摘要支持。" in result
+    assert "置信度: medium" in result
 
 
 def test_format_distilled_item_includes_limits():
@@ -143,7 +145,8 @@ def test_format_distilled_item_handles_missing_optional_fields():
     }
 
     result = format_distilled_item(item)
-    assert result == "Simple model: 简洁描述。"
+    assert "**Simple model**" in result
+    assert "简洁描述。" in result
 
 
 def test_format_distilled_item_formats_scenario_test():
@@ -153,8 +156,8 @@ def test_format_distilled_item_formats_scenario_test():
         "expected_behavior": "先问 impact，再讨论方案。",
     }
 
-    result = format_distilled_item(item)
-    assert "评审场景" in result
+    result = format_distilled_item(item, section="scenario_tests")
+    assert "**评审场景**" in result
     assert "期望行为: 先问 impact" in result
 
 

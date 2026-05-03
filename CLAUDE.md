@@ -79,8 +79,14 @@ The system is implemented as a local-first seven-module pipeline. P0-P2 currentl
 
 **P0-P2 implementation is merged locally.** The current suite has 132 pytest tests covering schemas, profile/template resources, intake, ingest, evidence building, distillation validation, generation, structured review, export/install, CLI flow, examples, and update conflict handling.
 
+**Voice mode**: `voice_mode` defaults are auto-inferred from profile type: `self` and `relationship` → `first_person`, `colleague` and `mentor` → `advisor`. Users can override with `--voice-mode`.
+
+**Templates**: `advisor.md` (third-person observer with structured evidence sections) and `first_person.md` (nuwa-style immersive first-person with role-playing rules, identity card, internal routing, and signature quotes). Both support optional `quote`/`quote_source` fields in distillation items.
+
+**CLI**: 9 subcommands — `create`, `ingest`, `question`, `interview` (interactive 20-question loop), `check-coverage`, `build`, `review`, `export`, `install`.
+
+**Quality**: `scripts/quality_check.py` runs 7 automated checks on generated SKILL.md files. `corpus/raw/` archives ingested source text for verification. `GOVERNANCE.md` documents governance rules.
+
 **Known boundary:** distillation synthesis is still agent-assisted through `distillation.json`; Python validates and renders durable artifacts but does not independently infer all human perspective content from raw sources.
 
 **Reference repos:** `references/repos/colleague-skill` (engineering patterns) and `references/repos/nuwa-skill` (distillation methods) are not tracked in git (`.gitignore`).
-
-**Existing skill:** `zg-strategy-distillation/` is a separate, working Claude Code skill for distilling Z哥's investment strategy knowledge — not part of the human2skill pipeline.

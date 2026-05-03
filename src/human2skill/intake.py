@@ -14,9 +14,11 @@ def normalize_profile(profile_type: str | None) -> str:
     return "relationship"
 
 
-def normalize_voice_mode(voice_mode: str | None) -> str:
+def normalize_voice_mode(voice_mode: str | None, profile_type: str | None = None) -> str:
     if voice_mode in VOICE_MODES:
         return voice_mode
+    if profile_type in ("self", "relationship"):
+        return "first_person"
     return "advisor"
 
 
@@ -31,6 +33,7 @@ def build_person_meta(
     now: str | None = None,
 ) -> dict:
     timestamp = now or utc_now_iso()
+    resolved_voice_mode = normalize_voice_mode(voice_mode, profile_type)
     meta = {
         "schema_version": "1",
         "slug": slug,
@@ -38,7 +41,7 @@ def build_person_meta(
         "profile_type": normalize_profile(profile_type),
         "relationship_to_user": relationship_to_user,
         "use_case": use_case,
-        "voice_mode": normalize_voice_mode(voice_mode),
+        "voice_mode": resolved_voice_mode,
         "consent_status": {
             "person_consented": False,
             "distribution_allowed": False,
@@ -46,7 +49,7 @@ def build_person_meta(
         },
         "privacy_policy": {
             "raw_retention": "summary_only",
-            "public_skill_allows_private_quotes": False,
+            "public_skill_allows_private_quotes": resolved_voice_mode == "first_person",
         },
         "export_policy": {
             "default_visibility": "private",

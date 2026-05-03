@@ -76,18 +76,20 @@ outputs/{slug}/
 
 若未明确指定，Agent 根据关系描述关键词自动推断。
 
-5. **语气模式**：
+5. **语气模式**（若不指定则按 profile 自动推断）：
 
 | 模式 | 产物文件 | 用途 |
 | --- | --- | --- |
-| advisor | `SKILL.md` | 第三人称视角顾问（默认），以观察者身份提供视角分析 |
-| first_person | `SKILL.first_person.md` | 第一人称视角自用，用于自我反思和决策镜像 |
+| advisor | `SKILL.md` | 第三人称视角顾问，以观察者身份提供视角分析（同事/导师默认） |
+| first_person | `SKILL.first_person.md` | 沉浸式第一人称，首次激活说一次免责声明后全程自然对话（自己/亲友默认） |
+
+自动推断规则：`self` / `relationship` → first_person；`colleague` / `mentor` → advisor。用户可通过 `--voice-mode` 覆盖。
 
 6. **隐私配置确认**：Agent 在创建前向用户确认隐私策略。
 
 默认隐私策略：
 - **留存模式**: `summary_only` — 保留摘要，不存原文
-- **公开 Skill 不包含私域原文**: public_skill_allows_private_quotes 强制为 false
+- **公开 Skill 可含脱敏引用**: first_person 模式默认启用有限原话引用（≤280 字符，经 PII 扫描）；advisor 模式可选
 - **默认不要求本人同意**: person_consented 默认 false
 - **默认不分发**: distribution_allowed 默认 false
 
@@ -109,7 +111,19 @@ human2skill create --root . --slug zhang-san --name "张三" \
 
 ---
 
-### Phase 1: 语料摄入 + 自适应访谈
+### Phase 1: 信息收集
+
+Agent 在开始前向用户展示三个选项：
+
+> **在开始蒸馏之前，我有三种方式收集信息：**
+>
+> **A. 提供语料** — 你有聊天记录、会议纪要、笔记等材料，我帮你导入分析
+> **B. 20 问快答** — 我来问你最多 20 个问题，你逐一回答（适合本人蒸馏，随时可以 `done` 结束）
+> **C. 直接描述** — 你直接告诉我这个人的特点、习惯、思维方式，我来帮你整理成结构化描述
+>
+> 你想选哪个？（也可以组合使用）
+
+快捷入口：用户说 `/human2skill Q20` 直接跳到 B（20 问快答），跳过 A 和 C。
 
 #### 1.1 语料摄入
 
@@ -129,9 +143,15 @@ human2skill ingest --root . --slug zhang-san --file ./notes/meeting.pdf
 - 原始文本自动保存到 `corpus/raw/{source_id}.txt`
 - PII 扫描程序化执行：发现身份证、手机号、完整聊天记录等敏感信息立即停止，提示用户脱敏
 
-#### 1.2 自适应访谈
+#### 1.2 自适应访谈（可选，非强制）
 
-Agent 分析当前信息覆盖度（10 个维度），对缺口维度启动追问：
+Agent 分析当前信息覆盖度（10 个维度），对缺口维度启动追问。也可通过 CLI 直接运行交互式循环：
+
+```bash
+human2skill interview --root . --slug zhang-san --profile colleague --perspective observer_answer
+```
+
+交互规则：每轮显示问题 → 用户输入回答（多行以空行结束）→ 下一轮。输入 `skip` 跳过、`done` 提前结束。回答自动保存到 `private_evidence/interviews/`。
 
 1. identity_context — 基本身份与关系语境
 2. mental_models — 核心思维模型
@@ -152,7 +172,14 @@ Agent 将访谈记录写入 `private_evidence/interviews/interview-YYYYMMDD-HHMM
 
 ### ⛔ Checkpoint A — 覆盖率审查
 
-**Agent 必须在此暂停，展示覆盖率摘要，等待用户确认。**
+**Agent 必须在此暂停，展示覆盖率摘要，等待用户确认后才能继续。**
+
+> 用户可以输入：y（继续）/ 补充信息 / 降级确认
+
+也可通过 CLI 查看：
+```bash
+human2skill check-coverage --root . --slug zhang-san
+```
 
 展示格式：
 
@@ -204,12 +231,15 @@ Agent 编写 `private_evidence/distillation.json`，包含 9 个章节：mental_
 - `honest_boundaries` 至少 3 条
 - 所有 `scenario_tests` 必须包含 `expected_behavior` 字段
 - 每个非 `honest_boundaries` 项必须有至少一个 `claim_id`
+- 可选 `quote` 字段（≤280 字符）：收录此人原话，用于增强真实感和可验证性。first_person 模式建议每个心智模型至少附一条 quote
 
 ---
 
 ### ⛔ Checkpoint B — 蒸馏确认
 
-**Agent 必须在此暂停，展示蒸馏摘要，等待用户确认。**
+**Agent 必须在此暂停，展示蒸馏摘要，等待用户确认后才能继续。**
+
+> 用户可以输入：y（继续）/ 修改具体条目 / 回到 Phase 1 补充信息
 
 展示格式：
 
@@ -239,10 +269,11 @@ human2skill build --root . --slug zhang-san
 1. 校验 `distillation.json` schema 和 claim-id 完整性（Layer 1）
 2. 检测 overconfident claims
 3. 运行场景测试回放（Layer 2）
-4. 渲染 Skill 变体（advisor + first_person）并写入 `public_skill/`
-5. 运行结构化评审（7 维度评分，confidence_calibration ≥5 为必须）
-6. 写入评审报告和场景报告到 `private_evidence/reviews/`
-7. 快照版本到 `versions/v{n}/`（仅当全部通过）
+4. 收集签名语录 + 关键引用（从含 `quote` 字段的条目中提取）
+5. 渲染 Skill 变体（advisor 第三人称观察 / first_person nuwa 沉浸式）并写入 `public_skill/`
+6. 运行结构化评审（7 维度评分，confidence_calibration ≥5 为必须）
+7. 写入评审报告和场景报告到 `private_evidence/reviews/`
+8. 快照版本到 `versions/v{n}/`（仅当全部通过）
 
 Skill 命名格式：`{slug}-lens`
 
@@ -280,6 +311,8 @@ Skill 命名格式：`{slug}-lens`
 ### ⛔ Checkpoint C — 验证确认
 
 **Agent 展示验证结果表格，等待用户确认后才算完成。**
+
+> 用户可以输入：y（完成）/ 回到 Phase 2 调整（最多 2 轮迭代）/ 降级交付当前版本
 
 展示格式：
 
@@ -338,8 +371,8 @@ human2skill install --export outputs/zhang-san/exports/claude-code --target ~/.c
 
 ## 强制规则
 
-1. **不输出私域原文** — 默认为 `summary_only`，原始语料不进入可分发 Skill
-2. **不做角色扮演** — 生成 Skill 以"视角顾问"方式回答，不声称是本人
+1. **不输出未经脱敏的完整私域原文** — 默认 `summary_only`，但 first_person 模式允许 ≤280 字符的脱敏原话引用
+2. **沉浸式第一人称（first_person）** — 首次激活说一次免责声明，之后全程自然对话；advisor 模式保持第三人称观察
 3. **区分已证实和推断** — 每项结论标注 confidence 和 evidence_summary
 4. **诚实标注边界** — 证据不足时不强行推断，写入 honest_boundaries
 5. **版本化管理** — 每次构建生成版本快照，允许回滚
@@ -351,13 +384,14 @@ human2skill install --export outputs/zhang-san/exports/claude-code --target ~/.c
 
 ## 禁止事项
 
-- 不生成冒充本人的 Skill
-- 不输出身份证号、手机号、完整私聊记录等私域原文
+- 不生成冒充本人的 Skill（first_person 模式首次激活说免责声明，之后沉浸但不冒充）
+- 不输出身份证号、手机号、完整私聊记录等未经脱敏的私域原文
 - 不替用户操控与目标人物的关系
 - 不在无证据支持下宣称高置信度
 - 不跳过评审直接交付
 - 不在矛盾未解决时强行合入新版本
 - 不跳过任何 Checkpoint 自动推进
+- 不为通过质量检查而编造 quote、引用或来源
 
 ---
 

@@ -66,35 +66,63 @@ def validate_distillation(payload: dict, available_claim_ids: set[str], person_s
                 raise DistillationError(f"{cid}")
 
 
-def format_distilled_item(item: dict) -> str:
-    """Format a single distilled item as a human-readable string.
+def format_distilled_item(item: dict, section: str = "") -> str:
+    """Format a single distilled item as a human-readable markdown block.
 
-    Returns a string like::
-
-        Title: content (confidence; evidence summary)
-          - 限制: limit1
-
-    ``scenario_tests`` items additionally include::
-
-        期望行为: expected_behavior
+    Format varies by section type.  ``mental_models`` and similar insight
+    sections use a structured block; ``honest_boundaries`` and marker
+    sections use a simpler one-liner.
     """
-    result = f"{item['title']}: {item['content']}"
+    quote = item.get("quote", "")
+    quote_source = item.get("quote_source", "")
+    confidence = item.get("confidence", "")
+    evidence_summary = item.get("evidence_summary", "")
 
-    confidence = item.get("confidence")
-    evidence_summary = item.get("evidence_summary")
-    if confidence and evidence_summary:
-        result += f" ({confidence}; {evidence_summary})"
+    if section == "honest_boundaries":
+        result = f"{item['title']}: {item['content']}"
+        if confidence:
+            result += f" ({confidence})"
+        return result
+
+    if section == "scenario_tests":
+        result = f"**{item['title']}**\n{item['content']}"
+        if item.get("expected_behavior"):
+            result += f"\n- 期望行为: {item['expected_behavior']}"
+        if quote:
+            result += f"\n> \"{quote}\""
+            if quote_source:
+                result += f" —— {quote_source}"
+        return result
+
+    if section == "expression_dna":
+        result = f"**{item['title']}**: {item['content']}"
+        if quote:
+            result += f"\n> \"{quote}\""
+            if quote_source:
+                result += f" —— {quote_source}"
+        if evidence_summary:
+            result += f"\n- 证据: {evidence_summary}"
+        if confidence:
+            result += f" (置信度: {confidence})"
+        return result
+
+    # Default structured format for: mental_models, decision_heuristics,
+    # profile_specific, pressure_response, value_order, anti_patterns.
+    result = f"**{item['title']}**\n{item['content']}"
+    if quote:
+        result += f"\n> \"{quote}\""
+        if quote_source:
+            result += f" —— {quote_source}"
+    if evidence_summary:
+        meta_parts = [f"证据: {evidence_summary}"]
+        if confidence:
+            meta_parts.append(f"置信度: {confidence}")
+        result += "\n- " + "，".join(meta_parts)
     elif confidence:
-        result += f" ({confidence})"
-    elif evidence_summary:
-        result += f" ({evidence_summary})"
-
+        result += f"\n- 置信度: {confidence}"
     for limit in item.get("limits", []):
-        result += f"\n  - 限制: {limit}"
-
-    if "expected_behavior" in item:
-        result += f"\n  期望行为: {item['expected_behavior']}"
-
+        if limit.strip():
+            result += f"\n- 限制: {limit}"
     return result
 
 
@@ -103,7 +131,7 @@ def distillation_to_sections(payload: dict) -> dict[str, list[str]]:
 
     Each section key maps to a list of ``format_distilled_item`` results.
     """
-    return {key: [format_distilled_item(item) for item in payload.get(key, [])] for key in _OUTPUT_SECTIONS}
+    return {key: [format_distilled_item(item, section=key) for item in payload.get(key, [])] for key in _OUTPUT_SECTIONS}
 
 
 _OVERCONFIDENCE_RANK = {"unsupported": 0, "low": 1, "medium": 2, "high": 3}

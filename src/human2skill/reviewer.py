@@ -40,33 +40,50 @@ def _score_confidence_calibration(overconfident_claims: list) -> int:
         return 1
 
 
-def _score_honest_boundary(content: str) -> int:
-    """Score honest boundary quality (1-5). Higher = better defined boundaries."""
+def _count_section_items(content: str, section_marker: str, skip_placeholder: bool = False) -> int:
+    """Count substantive items in a markdown section.
+
+    Handles both bullet-list format (``- item``) and block format
+    (``**Title**`` or ``Title: content`` separated by blank lines).
+    When *skip_placeholder* is True, items like "证据不足，暂不生成" are excluded.
+    """
     lines = content.split("\n")
-    in_boundary = False
-    boundary_items = []
+    in_section = False
+    count = 0
 
     for line in lines:
-        if "诚实边界" in line and (line.startswith("##") or line.startswith("#")):
-            in_boundary = True
+        if section_marker in line and (line.startswith("##") or line.startswith("#")):
+            in_section = True
             continue
-        if in_boundary:
+        if in_section:
             if line.startswith("##"):
                 break
             stripped = line.strip()
-            if stripped.startswith("-") and len(stripped) > 5:
-                content_text = stripped[1:].strip()
-                if content_text and content_text not in ("不确定", "不确定。", "未知", "未知。"):
-                    boundary_items.append(content_text)
+            # Bullet format: "- item"
+            if stripped.startswith("- ") and len(stripped) > 3:
+                text = stripped[2:].strip()
+                if not text:
+                    continue
+                if skip_placeholder and "证据不足" in text:
+                    continue
+                count += 1
+            # Block format: "**Title**" at section start
+            elif stripped.startswith("**") and "**" in stripped[2:]:
+                count += 1
 
-    if not boundary_items:
+    return count
+
+
+def _score_honest_boundary(content: str) -> int:
+    """Score honest boundary quality (1-5). Higher = better defined boundaries."""
+    count = _count_section_items(content, "诚实边界")
+    if count == 0:
         if "诚实边界" in content:
             return 2
         return 1
-
-    if len(boundary_items) >= 3:
+    if count >= 3:
         return 5
-    elif len(boundary_items) >= 2:
+    elif count >= 2:
         return 4
     else:
         return 3
@@ -75,7 +92,7 @@ def _score_honest_boundary(content: str) -> int:
 def _score_privacy_safety(content: str) -> int:
     """Score privacy safety (1-5). Higher = better privacy controls."""
     score = 1
-    if "不代表本人观点" in content:
+    if "不代表本人观点" in content or "非本人观点" in content:
         score += 2
     if not any(marker in content for marker in PRIVATE_MARKERS):
         score += 2
@@ -85,23 +102,7 @@ def _score_privacy_safety(content: str) -> int:
 def _score_expression_similarity(content: str) -> int:
     """Score expression similarity presence (1-5)."""
     if "表达 DNA" in content or "表达DNA" in content or "表达风格" in content:
-        lines = content.split("\n")
-        in_section = False
-        count = 0
-        for line in lines:
-            if ("表达" in line and ("DNA" in line or "风格" in line)) and (
-                line.startswith("##") or line.startswith("#")
-            ):
-                in_section = True
-                continue
-            if in_section:
-                if line.startswith("##"):
-                    break
-                if line.strip().startswith("-") and len(line.strip()) > 3:
-                    text = line.strip()[1:].strip()
-                    if text and "证据不足" in text:
-                        continue
-                    count += 1
+        count = _count_section_items(content, "表达", skip_placeholder=True)
         if count >= 2:
             return 5
         elif count >= 1:
@@ -114,21 +115,7 @@ def _score_expression_similarity(content: str) -> int:
 def _score_thinking_utility(content: str) -> int:
     """Score thinking utility (1-5). Higher = more useful thinking models."""
     if "核心思维模型" in content or "思维模型" in content:
-        lines = content.split("\n")
-        in_section = False
-        count = 0
-        for line in lines:
-            if "思维模型" in line and (line.startswith("##") or line.startswith("#")):
-                in_section = True
-                continue
-            if in_section:
-                if line.startswith("##"):
-                    break
-                if line.strip().startswith("-") and len(line.strip()) > 3:
-                    text = line.strip()[1:].strip()
-                    if text and "证据不足" in text:
-                        continue
-                    count += 1
+        count = _count_section_items(content, "思维模型", skip_placeholder=True)
         if count >= 2:
             return 5
         elif count >= 1:
@@ -261,13 +248,13 @@ def structured_review(
         hard_failures.append("missing_honest_boundaries")
     if any(marker in content for marker in PRIVATE_MARKERS):
         hard_failures.append("contains_private_raw_material")
-    if "不代表本人观点" not in content:
+    if "不代表本人观点" not in content and "非本人观点" not in content:
         hard_failures.append("missing_disclaimer")
     if overconfident_claims:
         hard_failures.append("unsupported_high_confidence_claims")
     if unresolved_conflicts:
         hard_failures.append("unresolved_conflicts")
-    if variant == "first_person" and "不代表本人观点" not in content:
+    if variant == "first_person" and "不代表本人观点" not in content and "非本人观点" not in content:
         hard_failures.append("first_person_missing_disclaimer")
 
     threshold_failures = [

@@ -1,3 +1,6 @@
+import json as _json
+from pathlib import Path
+
 from human2skill.constants import INTERVIEW_BUDGET
 
 CORE_DIMENSIONS = (
@@ -121,6 +124,112 @@ def next_question_for_profile(
             return question
 
     return "信息覆盖已经足够，可以进入蒸馏。"
+
+
+def run_interview_loop(
+    *,
+    profile_type: str,
+    perspective: str,
+    output_dir: Path,
+    coverage: dict[str, str] | None = None,
+) -> dict:
+    """Run an interactive interview loop on stdin/stdout.
+
+    Returns the final coverage dict after the loop ends (user types ``done``
+    or the budget is exhausted).
+    """
+    from datetime import datetime, timezone
+
+    cov = coverage or initial_coverage()
+    turn = 0
+    answers: list[dict] = []
+
+    print("=" * 60)
+    print("human2skill 20 问快速蒸馏")
+    print(f"Profile: {profile_type} | 视角: {perspective}")
+    print("输入你的回答（多行用空行结束），skip 跳过当前问题，done 提前结束")
+    print("=" * 60)
+    print()
+
+    while turn < INTERVIEW_BUDGET:
+        turn += 1
+        question = next_question_for_profile(
+            cov,
+            profile_type=profile_type,
+            perspective=perspective,
+            turn_count=turn,
+        )
+
+        if "信息覆盖已经足够" in question:
+            print(f"\n✅ {question}")
+            break
+
+        if "已达到访谈预算上限" in question:
+            print(f"\n⛔ {question}")
+            break
+
+        print(f"\n--- 第 {turn}/{INTERVIEW_BUDGET} 问 ---")
+        print(f"{question}")
+        print()
+
+        lines: list[str] = []
+        while True:
+            try:
+                line = input()
+            except EOFError:
+                break
+            if line == "":
+                break
+            lines.append(line)
+        answer = "\n".join(lines).strip()
+
+        if answer.lower() == "done":
+            print("\n已提前结束访谈。")
+            break
+        if answer.lower() == "skip":
+            print("已跳过。")
+            continue
+
+        answers.append({
+            "turn": turn,
+            "question": question,
+            "answer": answer,
+        })
+
+        # Mark the dimension as at least "low" to prevent infinite loop on same gap
+        # Find which dimension this question targets
+        for dim in CORE_DIMENSIONS:
+            if cov.get(dim) in ("missing", "low"):
+                cov[dim] = "low"
+                break
+
+    # Write interview record
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    record = {
+        "profile_type": profile_type,
+        "perspective": perspective,
+        "turns": len(answers),
+        "budget": INTERVIEW_BUDGET,
+        "answers": answers,
+    }
+    (output_dir / f"interview-{ts}.json").write_text(
+        _json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+    # Print Checkpoint A summary
+    assessment = assess_coverage(cov)
+    print()
+    print("=" * 60)
+    print("⛔ Checkpoint A — 覆盖率审查")
+    print("=" * 60)
+    print(f"维度覆盖: {assessment['dimensions_covered']}/{assessment['total_dimensions']} ≥ medium")
+    print(f"诚实边界: {'已标注' if assessment['has_boundary'] else '未标注'}")
+    print(f"缺口维度: {', '.join(assessment['gaps']) if assessment['gaps'] else '无'}")
+    print(f"状态: {'✅ 满足进入蒸馏条件' if assessment['sufficient'] else '❌ 建议继续补充或签署降级确认'}")
+    print("=" * 60)
+
+    return cov
 
 
 def assess_coverage(coverage: dict[str, str]) -> dict:
