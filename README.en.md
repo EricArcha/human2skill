@@ -131,7 +131,7 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/python -m pytest
 ```
 
-For development details, see [CLAUDE.md](CLAUDE.md). For the governance and rule system, see [docs/GOVERNANCE.md](docs/GOVERNANCE.md). For version history, see [CHANGELOG.md](CHANGELOG.md).
+For development details, see [CLAUDE.md](CLAUDE.md). For the governance and rule system, see [GOVERNANCE.md](GOVERNANCE.md). For version history, see [CHANGELOG.md](CHANGELOG.md).
 
 The repo includes three example persons (in the `examples/` directory), each with a complete private evidence pack, public Skill, review reports, and version snapshots.
 

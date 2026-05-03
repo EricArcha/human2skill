@@ -129,7 +129,7 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/python -m pytest
 ```
 
-开发细节见 [CLAUDE.md](CLAUDE.md)，规则体系见 [docs/GOVERNANCE.md](docs/GOVERNANCE.md)，版本变更见 [CHANGELOG.md](CHANGELOG.md)。
+开发细节见 [CLAUDE.md](CLAUDE.md)，规则体系见 [GOVERNANCE.md](GOVERNANCE.md)，版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 仓库包含三个示例人物（`examples/` 目录），每个都包含完整的私有证据、公开 Skill、评审报告和版本快照。
 

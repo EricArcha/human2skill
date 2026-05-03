@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `assess_coverage()`：10 维度覆盖率量化评估。
 - CLI choices 验证：`--profile`、`--voice-mode`、`--perspective`、`--host`、`--variant` 增加 argparse choices。
 - CLI 集中错误处理：`_handle_error()` 统一错误输出。
-- `docs/GOVERNANCE.md`：治理文档，记录护栏规则、验证标准、命名约定。
+- `GOVERNANCE.md`：治理文档，记录护栏规则、验证标准、命名约定和变更影响矩阵。
 
 ### Changed
 - **Skill 命名**：`{slug}-perspective` → `{slug}-lens`（`generator.py`）。
@@ -47,7 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 移除 Actions 徽章（无 CI workflow）
 - 新增 MIT LICENSE
 - 删除 `exports/*/README.md`（统一为 `INSTALL.md`）
-- 删除残留空目录 `people/`
+- 删除残留空目录 `people/`、`.claude/skills/human2skill/`、`.claude/skills/brittany/`
+- GOVERNANCE.md §5 新增变更影响矩阵（13 种变更类型 × 下游文件）
+- GOVERNANCE.md 从 `docs/` 移至根目录，与 README/CHANGELOG/CLAUDE/LICENSE 同级
+- docs/ 目录重组：`superpowers/plans/` → `archive/plans/` 归档备查，`specs/` 与 `design/` 平级
 
 ## [1.0.0] - 2026-04-29
 

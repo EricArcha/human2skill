@@ -229,7 +229,7 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 ### 5.4 修改护栏规则（详细流程）
 
 1. 在 `constants.py` 中修改常量（如有）
-2. 在 `docs/GOVERNANCE.md` 中描述变更和理由
+2. 在 `GOVERNANCE.md` 中描述变更和理由
 3. 查 §5.2 矩阵中"常量/阈值"和"验证逻辑"两行，同步所有下游文件
 4. 更新 `CHANGELOG.md`
 5. 运行 `make test` 确认无回归
