@@ -5,6 +5,19 @@ All notable changes to human2skill are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-05-03
+
+### Added
+- **增量更新模式**：Phase 0 新增 slug 存在性检测，已有项目自动分流到"增量更新模式"。不重写整个 Skill，只增量更新。含冲突检测、pre-update 备份、版本自动递增。
+- **`human2skill status`** CLI 子命令：查看项目概况（版本号、心智模型数、来源数、快照数）。
+- **`create --force`** 保护：对已有 slug 直接 `create` 不再静默覆盖，报错引导走增量更新。`--force` 显式覆盖。
+- **`backup_before_update()`**：更新前将 `person.meta.json`、`distillation.json`、`evidence_pack.json` 快照到 `versions/v{n}_before_update/`。
+- **`project_exists()` / `project_status()`**：程序化 slug 存在性检查和项目状态查询。
+- **构建版本自动递增**：`build` 命令自动根据已有 versions 目录数递增 `lifecycle.version`。
+
+### Changed
+- **SKILL.md Phase 0**：新增 slug 存在性检查分支，Phase 0.5 标注为"仅新建流程"。增量更新流程从文末 6 行附录升级为完整 Step 0-6 章节。
+
 ## [2.1.0] - 2026-05-03
 
 ### Added
