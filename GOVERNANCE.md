@@ -194,11 +194,13 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 
 ### 5.1 核心原则
 
-**改一查三，清单勾，不靠记忆。**
+**每改必记，清单勾，不靠记忆。**
 
 本仓库的单一事实源分散在多个文件中（Python 代码、模板、meta-skill、README、GOVERNANCE）。每次修改任何源后，必须按矩阵检查所有受影响的下游文件。v2.0.0 审计发现的 12 个问题中有 4 个是"改了代码忘了同步文档"导致的。
 
 ### 5.2 变更影响矩阵
+
+**CHANGELOG.md 为所有变更类型的通用同步目标。** 以下矩阵仅列出类型特定文件。
 
 按变更类型查表，逐项检查 `→` 右边的文件是否需同步更新。
 
@@ -221,7 +223,7 @@ git clone https://github.com/EricArcha/human2skill.git ~/.claude/skills/human2sk
 ### 5.3 使用方式
 
 1. 确定变更属于上述哪种类型。
-2. 逐行检查 `→` 右侧的每个文件，打开确认是否需要同步。
+2. 逐行检查 `→` 右侧的每个文件，打开确认是否需要同步。**所有变更（无论类型）必须确认 `CHANGELOG.md` 是否需要更新。**
 3. 修改后运行 `make test`（或 `python -m pytest`），确保 132 tests 通过。
 4. `git diff --stat` 确认变更范围与预期一致。
 5. 在 commit message 中注明跨文件同步（例：`fix: bump threshold, sync GOVERNANCE and CLAUDE.md`）。
